@@ -29,5 +29,7 @@ Route::post('bulk-excel-import', [ProductController::class, 'bulkExcelImport'])-
 
 Route::get('show-product-hsn', [ProductController::class, 'showHsn'])->name('showHsn');
 Route::get('pdfview', [ProductController::class, 'pdfview'])->name('pdfview');
-Route::get('view-invoice/{id}', [ProductController::class, 'showInvoice'])->name('view-invoice');
+Route::get('view-invoice/{mobile_no}', [ProductController::class, 'showInvoice'])->name('view-invoice');
 Route::get('truncate-table', [ProductController::class, 'truncateTable'])->name('truncateTable');
+Route::get('upload-gst-table', [ProductController::class, 'uploadGST'])->name('uploadGST');
+

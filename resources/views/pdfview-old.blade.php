@@ -1,27 +1,3 @@
-<?php
- $products = App\Models\ProductExcel::where('mobile_no', $items->mobile_no)->get();
- $product_gst = App\Models\ProductExcel::where('mobile_no', $items->mobile_no)->select('gst')->distinct()->get();
-?>
-<?php 
-    $total_amount = [];
-    foreach($products as $product){
-        $x = round(($product->quantity * $product->item_cost) + (($product->item_cost * $product->quantity) * $product->gst)/100, 2);
-        array_push($total_amount, $x);
-    }
-    $total_amount = array_sum($total_amount);
-
-    $total_tax = [];
-    $total_qty = [];
-    foreach($products as $product){
-        $y = round((($product->item_cost * $product->quantity) * $product->gst)/100, 2);
-        $qty = $product->quantity;
-        array_push($total_tax, $y);
-        array_push($total_qty, $qty);
-    }
-    $total_tax = array_sum($total_tax);
-    $amount = $total_amount - $total_tax;
-    $total_qty = array_sum($total_qty);
-?>
 <html><head></head><body>
 	<style>
 		@media print {
@@ -40,8 +16,7 @@
 	
 	<tbody><tr style="height:21.75pt">
 	   <td width="513" colspan="7" rowspan="5" valign="top" style="width:384.5pt;border:
-		  solid black 1.0pt;padding:0in 0in 0in 0in;height:21.75pt">
-          <img src="{{ asset('owo-water.png') }}" style="width: 100px; padding: 5px;margin-left: 400px; margin-bottom: -140px;" alt="oso.jpd"> 
+		  solid black 1.0pt;padding:0in 0in 0in 0in;height:21.75pt"><img src="{{ asset('owo.png') }}" style="width: 100px; padding: 5px; text-align-right" alt="oso.jpd"> 
 		  <p class="TableParagraph" style="margin-top:4.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
 			 font-family:Arial,sans-serif">OWO<span style="letter-spacing:.7pt"> </span>Technologies<span style="letter-spacing:.7pt"> </span>Pvt.<span style="letter-spacing:.75pt"> </span>Ltd.</span></b>
@@ -51,10 +26,9 @@
 			 .45pt"> </span>B4,<span style="letter-spacing:.5pt"> </span>11<span style="letter-spacing:.45pt"> </span>Floor,<span style="letter-spacing:.5pt">
 			 </span>Spaze<span style="letter-spacing:.45pt"> </span>ITech<span style="letter-spacing:.5pt"> </span>Park<span style="letter-spacing:-1.85pt">
 			 </span></span><span style="font-size:8.0pt;line-height:108%">Sohna<span style="letter-spacing:-.45pt"> </span>Road,<span style="letter-spacing:-.45pt">
-			 </span>Sector-49,</span><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span>
+			 </span>Sector-49,</span>
 		  </p>
-          <br>
-		  {{-- <p class="TableParagraph" style="margin-left:2.85pt;line-height:9.15pt"><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span></p> --}}
+		  <p class="TableParagraph" style="margin-left:2.85pt;line-height:9.15pt"><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:263.25pt;
 			 margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">GSTIN 06AADCO1175C1ZV<span style="letter-spacing:.05pt"> </span>FSSAI No--10020064002474<span style="letter-spacing:.05pt"> </span></span><span style="font-size:8.0pt;
 			 line-height:108%">GSTIN/UIN:</span><span style="font-size:8.0pt;line-height:
@@ -78,7 +52,7 @@
 			 0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Dated</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:1.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ date("d-M-y", strtotime($items->date)) }}</span></b></p>
+			 font-family:Arial,sans-serif">{{ date("d-M-y", strtotime($items->order_date)) }}</span></b></p>
 	   </td>
 	   <td style="height:21.75pt;border:none" width="0" height="29"></td>
 	</tr>
@@ -107,7 +81,7 @@
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.35pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ $items->invoice }}</span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif;letter-spacing:3.3pt"> </span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">dt.<span style="letter-spacing:.75pt"> </span>{{ date("d-M-y", strtotime($items->date)) }}</span></b></p>
+			 font-family:Arial,sans-serif">{{ $items->invoice }}</span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif;letter-spacing:3.3pt"> </span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">dt.<span style="letter-spacing:.75pt"> </span>{{ date("d-M-y", strtotime($items->order_date)) }}</span></b></p>
 	   </td>
 	   <td width="250" colspan="5" valign="top" style="width:187.5pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -157,12 +131,12 @@
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:9.0pt">Consignee<span style="letter-spacing:.7pt"> </span>(Ship<span style="letter-spacing:.75pt"> </span>to)</span></p>
 		  <p class="TableParagraph" style="margin-top:.05in;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ Str::title($items->customer_name_shipping) }}</b>
+			 font-family:Arial,sans-serif">{{ Str::title($items->first_name_shipping) }} {{ Str::title($items->last_name_shipping) }}</b>
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ Str::title($items->customer_address_shipping) }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ Str::title($items->address_1_2_shipping) }}</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">GSTIN/UIN:<span style="letter-spacing:.85pt"> </span>{{ $items->gst_no }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">GSTIN/UIN                                      :<span style="letter-spacing:.85pt"> </span>06AACCB4653P1ZD</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:7.4pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.35pt"> </span>Name:<span style="letter-spacing:1.4pt"> </span>{{ $shipping_state->state }},<span style="letter-spacing:
 			 -.3pt"> </span>Code<span style="letter-spacing:-.3pt"> </span>:<span style="letter-spacing:-.3pt"> </span>{{ $shipping_state->state_tin }}</span></p>
@@ -208,12 +182,12 @@
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.05in;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ Str::title($items->customer_name_billing) }}</span></b>
+			 font-family:Arial,sans-serif">{{ Str::title($items->first_name_billing) }} {{ Str::title($items->last_name_billing) }}</span></b>
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ Str::title($items->customer_address_billing) }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ Str::title($items->address_1_2_billing) }}</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">GSTIN/UIN :<span style="letter-spacing:.85pt"> </span>{{ $items->gst_no }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">GSTIN/UIN :<span style="letter-spacing:.85pt"> </span>06AACCB4653P1ZD</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.35pt"> </span>Name:<span style="letter-spacing:1.4pt"> </span>{{ $billing_state->state }},<span style="letter-spacing:
 			 -.3pt"> </span>Code<span style="letter-spacing:-.3pt"> </span>:<span style="letter-spacing:-.3pt"> </span>{{ $billing_state->state_tin }}</span></p>
@@ -376,208 +350,157 @@
 	<tr style="height:214.75pt">
 	   <td width="17" valign="top" style="width:13.0pt;border:solid black 1.0pt;
 		  border-top:none;padding:0in 0in 0in 0in;height:214.75pt">
-          @php $i = 1 @endphp
-		  @foreach ($products as $product)
-            <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-            0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $i++ }}</span></p>
-          @endforeach
+		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">1</span></p>
 	   </td>
 	   <td width="264" valign="top" style="width:197.9pt;border-top:none;border-left:
 		  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:214.75pt">
-		@foreach($products as $product)
-        <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-        0in;margin-left:1.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-        font-family:Arial,sans-serif">{{ Str::title($product->product_name) }}</span></p>        
-        @endforeach
+		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:1.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
+			 font-family:Arial,sans-serif">{{ $items->item_name }}</span></p>
 		  <p class="TableParagraph" style="margin-top:.2pt"><span style="font-size:11.5pt;
 			 font-family:Times New Roman,serif">&nbsp;</span></p>
 		 @if ($items->state_code_billing == 'HR')
-		 @foreach ($products as $product)
-         <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+		 <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
 		 0in;margin-left:100.85pt;margin-bottom:.0001pt;line-height:120%"><b><i>
-			 <span style="font-size:8.0pt;line-height:120%;font-family:Arial,sans-serif">Output CGST @ {{ $product->gst/2 }}% {{ $product->state_code_billing }}</span></i></b></p>
+			 <span style="font-size:8.0pt;line-height:120%;font-family:Arial,sans-serif">Output CGST @ {{ $items->gst/2 }}% {{ $items->state_code_billing }}</span></i></b></p>
 			 <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:100.85pt;margin-bottom:.0001pt;line-height:120%"><b><i>
-				 <span style="font-size:8.0pt;line-height:120%;font-family:Arial,sans-serif">Output SGST @ {{ $product->gst/2 }}% {{ $product->state_code_billing }}</span></i></b></p>
-         @endforeach
+				 <span style="font-size:8.0pt;line-height:120%;font-family:Arial,sans-serif">Output SGST @ {{ $items->gst/2 }}% {{ $items->state_code_billing }}</span></i></b></p>
 		  @else
-		 @foreach ($product_gst as $p_gst)
-         <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
-         0in;margin-left:100.85pt;margin-bottom:.0001pt;line-height:120%"><b><i>
-             <span style="font-size:8.0pt;line-height:120%;font-family:Arial,sans-serif">Output IGST @ {{ $p_gst->gst }}% {{ $product->state_code_billing }}</span></i></b></p>
-         @endforeach
+		  <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+		  0in;margin-left:100.85pt;margin-bottom:.0001pt;line-height:120%"><b><i>
+			  <span style="font-size:8.0pt;line-height:120%;font-family:Arial,sans-serif">Output IGST @ {{ $items->gst }}% {{ $items->state_code_billing }}</span></i></b></p>
 		 @endif
 	   </td>
 	   <td width="75" valign="top" style="width:56.1pt;border-top:none;border-left:none;
 		  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 0in 0in 0in;
 		  height:214.75pt">
-		@foreach ($products as $product)
-        <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-        0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; margin-left: 12px;">{{ $product->hsn }}</span></p>
-        @endforeach
+		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; margin-left: 12px;">{{ $items->hsn }}</span></p>
 	   </td>
 	   <td width="69" valign="top" style="width:51.9pt;border-top:none;border-left:none;
 		  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 0in 0in 0in;
 		  height:214.75pt">
-		@foreach ($products as $product)
-        <p class="TableParagraph" style="margin-top:6.00pt;margin-right:0in;margin-bottom:
-        0in;margin-left:19.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-        font-family:Arial,sans-serif">{{ Str::title($product->quantity) }} {{ Str::lower($product->attribute) }}</span></p>        
-        @endforeach
+		  <p class="TableParagraph" style="margin-top:6.35pt"><b><span style="font-size:
+			 8.0pt;font-family:Arial,sans-serif; margin-left: 12px;">{{ $items->quantity }} Nos</span></b></p>
 	   </td>
 	   <td width="78" colspan="2" valign="top" style="width:58.5pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:214.75pt">
-		 @foreach ($products as $product)
-         <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-         0in;"><span style="font-size:
-            8.0pt; margin-left: 12px;">&nbsp;&nbsp;{{ number_format(round($product->item_cost + ($product->item_cost * $product->gst)/100, 2), 2) }}</span></p>
-         @endforeach
+		  <p class="TableParagraph" style="margin-top:6.35pt"><span style="font-size:
+			 8.0pt; margin-left: 12px;">&nbsp;&nbsp;{{ number_format(round($items->item_cost + ($items->item_cost * $items->gst)/100, 2), 2) }}</span></p>
 	   </td>
 	   <td width="61" colspan="2" valign="top" style="width:45.6pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:214.75pt">
-		  @foreach ($products as $product)
-          <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-          0in;margin-left:10.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $product->item_cost }}</span></p>
-          @endforeach
+		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:10.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $items->item_cost }}</span></p>
 		  <p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
-		  <p class="TableParagraph" style="margin-top:-28.2pt"><span style="font-size:11.5pt;
+		  <p class="TableParagraph" style="margin-top:.2pt"><span style="font-size:11.5pt;
 			 font-family:Times New Roman,serif">&nbsp;</span></p>
 		  @if ($items->state_code_billing == 'HR')
-		  @foreach ($products as $product)
-          <p class="TableParagraph" style="margin-top:-.05pt;margin-right:0in;margin-bottom:
-             0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $product->gst/2 }}</span></p>
-            <p class="TableParagraph" style="margin-top:1.8pt;margin-right:0in;margin-bottom:
-            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $product->gst/2 }}</span></p>
-          @endforeach
+		  <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $items->gst/2 }}</span></p>
+		  <p class="TableParagraph" style="margin-top:1.8pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $items->gst/2 }}</span></p>
 			@else
-			@foreach ($product_gst as $p_gst)
-            <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
-            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $p_gst->gst }}</span></p>
-            @endforeach
+			<p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $items->gst }}</span></p>
 			@endif
 	   </td>
 	   <td width="32" valign="top" style="width:24.0pt;border-top:none;border-left:none;
 		  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 0in 0in 0in;
 		  height:214.75pt">
-		 @foreach ($products as $product)
-         <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-         0in;margin-left:7.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $product->pack_name }}</span></p>
-         @endforeach
+		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:7.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Nos</span></p>
 		  <p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
-		  <p class="TableParagraph" style="margin-top:-28.2pt"><span style="font-size:11.5pt;
+		  <p class="TableParagraph" style="margin-top:.2pt"><span style="font-size:11.5pt;
 			 font-family:Times New Roman,serif">&nbsp;</span></p>
 		 @if($items->state_code_billing == 'HR')
-		@foreach ($products as $product)
-        <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
-        0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">%</span></p>
-         <p class="TableParagraph" style="margin-top:1.8pt;margin-right:0in;margin-bottom:
-        0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">%</span></p>
-        @endforeach
-		 @else
-		 @foreach ($product_gst as $p_gst)
-         <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+		 <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
 		 0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">%</span></p>
-         @endforeach
+	  	<p class="TableParagraph" style="margin-top:1.8pt;margin-right:0in;margin-bottom:
+		 0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">%</span></p>
+		 @else
+		 <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+		 0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">%</span></p>
 		 @endif
 	   </td>
 	   <td width="79" colspan="1" valign="top" style="width:50.0pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:214.75pt">
-		  @foreach ($products as $product)
-          <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-          0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
-          8.0pt;font-family:Arial,sans-serif">{{ number_format(round(($product->item_cost * $product->quantity), 2), 2) }}</span></b></p>
-          @endforeach
+		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
+			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round(($items->item_cost * $items->quantity), 2), 2) }}</span></b></p>
 		  <p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
-		  <p class="TableParagraph" style="margin-top:-35.2pt"><span style="font-size:11.5pt;
+		  <p class="TableParagraph" style="margin-top:.2pt"><span style="font-size:11.5pt;
 			 font-family:Times New Roman,serif">&nbsp;</span></p>
 		  @if($items->state_code_billing == 'HR')
-		  @foreach ($products as $product)
-            <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
-            0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
-            8.0pt;font-family:Arial,sans-serif">{{ number_format(round((($product->item_cost * $product->quantity) * $product->gst/2)/100, 2), 2) }}</span></b></p>
-            <p class="TableParagraph" style="margin-top:0.8pt;margin-right:0in;margin-bottom:
-            0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
-            8.0pt;font-family:Arial,sans-serif">{{ number_format(round((($product->item_cost * $product->quantity) * $product->gst/2)/100, 2), 2) }}</span></b></p>
-          @endforeach
+		  <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
+			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst/2)/100, 2), 2) }}</span></b></p>
+		  <p class="TableParagraph" style="margin-top:1.8pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
+			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst/2)/100, 2), 2) }}</span></b></p>
 			 @else
-			@foreach ($products as $product)
-            <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
-            0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
-            8.0pt;font-family:Arial,sans-serif">{{ number_format(round((($product->item_cost * $product->quantity) * $product->gst)/100, 2), 2) }}</span></b></p>
-            @endforeach
+			 <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
+			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst)/100, 2), 2) }}</span></b></p>
 			 @endif
 	   </td>
 	   <td width="79" colspan="3" valign="top" style="width:59.0pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:214.75pt">
-		  @foreach ($products as $product)
-          <p class="TableParagraph" style="margin-top:7.35pt;margin-right:0in;margin-bottom:
-          0in;margin-left:24.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; margin-left: -11px;">{{ number_format(round(($product->item_cost * $product->quantity), 2), 2) }}</span></p>
-          @endforeach
+		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:24.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; margin-left: -11px;">{{ number_format(round(($items->item_cost * $items->quantity), 2), 2) }}</span></p>
 	   </td>
 	  	@if($items->state_code_billing == 'HR')
 			<td width="32" colspan="2" valign="top" style="width:24.0pt;border-top:none;
 			border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 			padding:0in 0in 0in 0in;height:214.75pt">
-			@foreach ($products as $product)
-            <p class="TableParagraph" style="margin-top:7.35pt;margin-right:0in;margin-bottom:
-            0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; margin-left: 12px;">{{ $product->gst/2 }}%</span></p>
-            @endforeach
+			<p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+				0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; margin-left: 12px;">{{ $items->gst/2 }}%</span></p>
 		</td>
 		<td width="60" valign="top" style="width:45.0pt;border-top:none;border-left:none;
 			border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 0in 0in 0in;
 			height:214.75pt">
-			@foreach ($products as $product)
-            <p class="TableParagraph" style="margin-top:7.35pt;margin-right:0in;margin-bottom:
-            0in;margin-left:10.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round((($product->item_cost * $product->quantity) * $product->gst/2)/100, 2), 2) }}</span></p>
-            @endforeach
+			<p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+				0in;margin-left:10.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst/2)/100, 2), 2) }}</span></p>
 		</td>
 		<td width="32" valign="top" style="width:24.0pt;border-top:none;border-left:none;
 			border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 0in 0in 0in;
 			height:214.75pt">
-			@foreach ($products as $product)
-            <p class="TableParagraph" align="center" style="margin-top:7.35pt;margin-right:
-            .1pt;margin-bottom:0in;margin-left:.1pt;margin-bottom:.0001pt;text-align:
-            center"><span style="font-size:8.0pt">{{ $product->gst/2 }}%</span></p>
-            @endforeach
+			<p class="TableParagraph" align="center" style="margin-top:6.35pt;margin-right:
+				.1pt;margin-bottom:0in;margin-left:.1pt;margin-bottom:.0001pt;text-align:
+				center"><span style="font-size:8.0pt">{{ $items->gst/2 }}%</span></p>
 		</td>
 		<td width="60" valign="top" style="width:45.0pt;border-top:none;border-left:none;
 			border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 0in 0in 0in;
 			height:214.75pt">
-			@foreach ($products as $product)
-            <p class="TableParagraph" style="margin-top:7.35pt;margin-right:0in;margin-bottom:
-            0in;margin-left:10.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round((($product->item_cost * $product->quantity) * $product->gst/2)/100, 2), 2) }}</span></p>
-            @endforeach
+			<p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+				0in;margin-left:10.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst/2)/100, 2), 2) }}</span></p>
 		</td>
 		@else
 		<td width="32" colspan="3" valign="top" style="width:24.0pt;border-top:none;
 		border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		padding:0in 0in 0in 0in;height:214.75pt">
-		@foreach ($products as $product)
-        <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-        0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; margin-left: 12px;">{{ $product->gst }}%</span></p>
-        @endforeach
+		<p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; margin-left: 12px;">{{ $items->gst }}%</span></p>
 		</td>
 		<td width="60" colspan="2" valign="top" style="width:45.0pt;border-top:none;border-left:none;
 		border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 0in 0in 0in;
 		height:214.75pt">
-		@foreach ($products as $product)
-        <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-        0in;margin-left:10.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round((($product->item_cost * $product->quantity) * $product->gst)/100, 2), 2) }}</span></p>
-        @endforeach
+		<p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			0in;margin-left:10.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst)/100, 2), 2) }}</span></p>
 		</td>
 		@endif
 	   <td width="79" valign="top" style="width:59.5pt;border-top:none;border-left:none;
 		  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 0in 0in 0in;
 		  height:214.75pt">
-		 @foreach ($products as $product)
-         <p class="TableParagraph" style="margin-top:7.35pt;margin-right:0in;margin-bottom:
-         0in;margin-left:14.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round(($product->quantity * $product->item_cost) + (($product->item_cost * $product->quantity) * $product->gst)/100, 2), 2) }}</span></p>
-         @endforeach
+		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round(($items->quantity * $items->item_cost) + (($items->item_cost * $items->quantity) * $items->gst)/100, 2), 2) }}</span></p>
 	   </td>
 	 
 	</tr>
@@ -596,7 +519,7 @@
 		<td colspan="1" valign="top" style="width:59.0pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
-		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ $total_qty }} Nos</span></p> {{-- Quantity --}}
+		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ $items->quantity }} Nos</span></p>
 		</td>
 		<td colspan="3" valign="top" style="width:57.35pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -617,12 +540,12 @@
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
 		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:9.0pt;font-family:Microsoft Sans Serif,sans-serif">₹<span style="letter-spacing:-.15pt"> </span></span><b><span style="font-size:9.0pt;
-			  font-family:Arial,sans-serif">{{ number_format(round($total_amount, 2), 2) }}</span></b></p> {{-- Total --}}
+			  font-family:Arial,sans-serif">{{ number_format(round(($items->quantity * $items->item_cost) + (($items->item_cost * $items->quantity) * $items->gst)/100, 2), 2) }}</span></b></p>
 		</td>
 		<td colspan="2" valign="top" style="width:59.15pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
-		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ number_format(round($amount, 2), 2) }}</span></p>
+		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ number_format(round(($items->item_cost * $items->quantity), 2), 2) }}</span></p>
 		</td>
    
 		<td colspan="2" valign="top" style="width:43.1pt;border-top:none;
@@ -634,7 +557,7 @@
 		<td colspan="1" valign="top" style="width:26.1pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
-		   <p class="TableParagraph"><span style="font-size:8.0pt;font-family:Times New Roman,serif; margin-left: 10px;">&nbsp;{{ number_format(round($total_tax/2, 2), 2) }}</span></p>
+		   <p class="TableParagraph"><span style="font-size:8.0pt;font-family:Times New Roman,serif; margin-left: 10px;">&nbsp;{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst/2)/100, 2), 2) }}</span></p>
 		</td>
 		<td colspan="1" valign="top" style="width:45.1pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -647,7 +570,7 @@
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
 		   <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
-			  0in;margin-left:10.1pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round($total_tax/2, 2), 2) }}</span></p>
+			  0in;margin-left:10.1pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst/2)/100, 2), 2) }}</span></p>
 		</td>
 		<td colspan="1" valign="top" style="width:45.1pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -673,7 +596,7 @@
 		<td colspan="1" valign="top" style="width:59.0pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
-		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ $total_qty }} Nos</span></p>
+		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ $items->quantity }} Nos</span></p>
 		</td>
 		<td colspan="1" valign="top" style="width:57.35pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -694,12 +617,12 @@
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
 		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:9.0pt;font-family:Microsoft Sans Serif,sans-serif">₹<span style="letter-spacing:-.15pt"> </span></span><b><span style="font-size:9.0pt;
-			  font-family:Arial,sans-serif">{{ number_format(round($total_amount, 2), 2) }}</span></b></p>
+			  font-family:Arial,sans-serif">{{ number_format(round(($items->quantity * $items->item_cost) + (($items->item_cost * $items->quantity) * $items->gst)/100, 2), 2) }}</span></b></p>
 		</td>
 		<td colspan="2" valign="top" style="width:59.15pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
-		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ number_format(round(($amount), 2), 2) }}</span></p>
+		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ number_format(round(($items->item_cost * $items->quantity), 2), 2) }}</span></p>
 		</td>
    
 		<td valign="top" style="width:24.55pt;border-top:none;border-left:
@@ -723,7 +646,7 @@
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
 		   <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
-			  0in;margin-left:20.1pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round($total_tax, 2), 2) }}</span></p>
+			  0in;margin-left:20.1pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst)/100, 2), 2) }}</span></p>
 		</td>
 		
 		<td colspan="2" valign="top" style="width:45.1pt;border-top:none;
@@ -736,7 +659,6 @@
 	 </tr>
 	@endif
 	{{-- End Total Part --}}
-
 	{{-- Here --}}
 	@if($items->state_code_billing == 'HR')
 	<tr style="height:15.75pt">
@@ -745,7 +667,7 @@
 		  none;padding:0in 0in 0in 0in;height:15.75pt">
 		  <p class="TableParagraph" style="margin-top:3.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Amount<span style="letter-spacing:.55pt"> </span>Chargeable<span style="letter-spacing:
-			 .55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount))) }} Only</span></b>
+			 .55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round(($items->quantity * $items->item_cost) + (($items->item_cost * $items->quantity) * $items->gst)/100), 2)) }} Only</span></b>
 		  </p>
 	   </td>
  
@@ -834,7 +756,7 @@
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:9.75pt">
 		  <p class="TableParagraph" style="margin-top:.35pt;margin-right:-5.05pt;
-			 margin-bottom:0in;margin-left:18.25pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ $amount }}</span></p>
+			 margin-bottom:0in;margin-left:18.25pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round(($items->item_cost * $items->quantity), 2), 2) }}</span></p>
 	   </td>
 	   <td width="59" colspan="1" valign="top" style="width:44.15pt;border:none;
 		  border-right:solid black 1.0pt;padding:0in 0in 0in 0in;height:9.75pt">
@@ -845,7 +767,7 @@
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:9.75pt">
 		  <p class="TableParagraph" style="margin-top:.35pt;margin-right:-1.45pt;
-			 margin-bottom:0in;margin-left:18.5pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round($total_tax/2, 2), 2) }}</span></p>
+			 margin-bottom:0in;margin-left:18.5pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst/2)/100, 2), 2) }}</span></p>
 	   </td>
 	   <td width="57" colspan="1" valign="top" style="width:43.1pt;border:none;border-right:
 		  solid black 1.0pt;padding:0in 0in 0in 0in;height:9.75pt">
@@ -856,13 +778,13 @@
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:9.75pt">
 		  <p class="TableParagraph" style="margin-top:.35pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:25.2pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round($total_tax/2, 2), 2) }}</span></p>
+			 0in;margin-left:25.2pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst/2)/100, 2), 2) }}</span></p>
 	   </td>
 	   <td width="89" colspan="2" valign="top" style="width:67.1pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:9.75pt">
 		  <p class="TableParagraph" style="margin-top:.35pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:35.05pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round($total_tax, 2), 2) }}</span></p>
+			 0in;margin-left:35.05pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round(((($items->item_cost * $items->quantity) * $items->gst/2)/100) * 2, 2), 2) }}</span></p>
 	   </td>
 	   <td style="height:9.75pt;border:none" width="0" height="13"></td>
 	</tr>
@@ -871,7 +793,7 @@
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:-5.05pt;
-			 margin-bottom:0in;margin-left:18.25pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ number_format(round($amount, 2), 2) }}</span></b></p>
+			 margin-bottom:0in;margin-left:18.25pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ number_format(round(($items->item_cost * $items->quantity), 2), 2) }}</span></b></p>
 	   </td>
 	   <td width="59" colspan="1" valign="top" style="width:44.15pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -882,7 +804,7 @@
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:-1.45pt;
-			 margin-bottom:0in;margin-left:18.5pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ number_format(round($total_tax/2, 2), 2) }}</span></b></p>
+			 margin-bottom:0in;margin-left:18.5pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst/2)/100, 2), 2) }}</span></b></p>
 	   </td>
 	   <td width="57" colspan="1" valign="top" style="width:43.1pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -894,14 +816,14 @@
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:25.2pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ number_format(round($total_tax/2, 2), 2) }}</span></b></p>
+			 font-family:Arial,sans-serif">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst/2)/100, 2), 2) }}</span></b></p>
 	   </td>
 	   <td width="89" colspan="2" valign="top" style="width:67.1pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:35.05pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round($total_tax, 2), 2) }}</span></b></p>
+			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round(((($items->item_cost * $items->quantity) * $items->gst/2)/100) * 2, 2), 2) }}</span></b></p>
 	   </td>
 	   <td style="height:11.75pt;border:none" width="0" height="16"></td>
 	</tr>
@@ -914,7 +836,7 @@
 		  none;padding:0in 0in 0in 0in;height:15.75pt">
 		  <p class="TableParagraph" style="margin-top:3.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Amount<span style="letter-spacing:.55pt"> </span>Chargeable<span style="letter-spacing:
-			 .55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount))) }} Only</span></b>
+			 .55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round(($items->quantity * $items->item_cost) + (($items->item_cost * $items->quantity) * $items->gst)/100), 2)) }} Only</span></b>
 		  </p>
 	   </td>
  
@@ -998,7 +920,7 @@
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:9.75pt">
 		  <p class="TableParagraph" style="margin-top:.35pt;margin-right:-5.05pt;
-			 margin-bottom:0in;margin-left:18.25pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round($amount, 2), 2) }}</span></p>
+			 margin-bottom:0in;margin-left:18.25pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round(($items->item_cost * $items->quantity), 2), 2) }}</span></p>
 	   </td>
 	   <td width="59" colspan="3" valign="top" style="width:44.15pt;border:none;
 		  border-right:solid black 1.0pt;padding:0in 0in 0in 0in;height:9.75pt">
@@ -1009,7 +931,7 @@
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:9.75pt">
 		  <p class="TableParagraph" style="margin-top:.35pt;margin-right:-1.45pt;
-			 margin-bottom:0in;margin-left:18.5pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round($total_tax, 2), 2) }}</span></p>
+			 margin-bottom:0in;margin-left:18.5pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst)/100, 2), 2) }}</span></p>
 	   </td>
 	   {{-- <td width="57" colspan="1" valign="top" style="width:43.1pt;border:none;border-right:
 		  solid black 1.0pt;padding:0in 0in 0in 0in;height:9.75pt">
@@ -1026,7 +948,7 @@
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:9.75pt">
 		  <p class="TableParagraph" style="margin-top:.35pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:35.05pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round($total_tax, 2), 2) }}</span></p>
+			 0in;margin-left:35.05pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">{{ number_format(round(((($items->item_cost * $items->quantity) * $items->gst/2)/100) * 2, 2), 2) }}</span></p>
 	   </td>
 	   <td style="height:9.75pt;border:none" width="0" height="13"></td>
 	</tr>
@@ -1035,7 +957,7 @@
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:-5.05pt;
-			 margin-bottom:0in;margin-left:18.25pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ number_format(round($amount, 2), 2) }}</span></b></p>
+			 margin-bottom:0in;margin-left:18.25pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ number_format(round(($items->item_cost * $items->quantity), 2), 2) }}</span></b></p>
 	   </td>
 	   <td width="59" colspan="3" valign="top" style="width:44.15pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -1046,7 +968,7 @@
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:-1.45pt;
-			 margin-bottom:0in;margin-left:18.5pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ number_format(round($total_tax, 2), 2) }}</span></b></p>
+			 margin-bottom:0in;margin-left:18.5pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ number_format(round((($items->item_cost * $items->quantity) * $items->gst)/100, 2), 2) }}</span></b></p>
 	   </td>
 	   {{-- <td width="57" colspan="1" valign="top" style="width:43.1pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -1065,7 +987,7 @@
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:35.05pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round($total_tax, 2), 2) }}</span></b></p>
+			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round(((($items->item_cost * $items->quantity) * $items->gst/2)/100) * 2, 2), 2) }}</span></b></p>
 	   </td>
 	   <td style="height:11.75pt;border:none" width="0" height="16"></td>
 	</tr>
@@ -1079,7 +1001,7 @@
 		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:9.1pt"><span style="font-size:8.0pt">Tax<span style="letter-spacing:.45pt"> </span>Amount<span style="letter-spacing:.45pt"> </span>(in<span style="letter-spacing:.45pt"> </span>words)<span style="letter-spacing:1.0pt"> </span>:</span><span style="font-size:8.0pt;
 			 letter-spacing:3.5pt"> </span><b><span style="font-size:8.0pt;font-family:
-			 Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_tax))) }} Only</span></b></p>
+			 Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round(((($items->item_cost * $items->quantity) * $items->gst/2)/100) * 2, 2))) }} Only</span></b></p>
 	   </td>
 	   <td width="132" colspan="4" rowspan="5" valign="top" style="width:98.85pt;border:
 		  none;border-bottom:solid black 1.0pt;padding:0in 0in 0in 0in;height:16.45pt">

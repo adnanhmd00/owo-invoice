@@ -18,6 +18,9 @@
             </div>
         @endif
         <div class="text-center"><a href="/" class="btn btn-primary btn-sm m-2">Go Home</a></div>
+        @if($gstTable->isEmpty())
+            <div class="text-center"><a href="{{ route('uploadGST') }}" class="btn btn-primary btn-sm m-2">Add GST Tables</a></div>
+        @endif
         <div class="text-center card p-4 shadow">
             <h1>Add Product Name & HSN</h1>
             <form action="{{ route('add-product') }}" method="post">

@@ -14,7 +14,7 @@
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <h1 class="text-center bg-secondary text-light">All Products</h1>
+        <h1 class="text-center bg-secondary text-light">All Orders</h1>
         <div class="text-right p-3">
             <a href="{{ route('showHsn') }}" class="btn btn-primary">Show Product HSN</a>
             <a href="{{ route('bulk-upload') }}" class="btn btn-primary">Excel Upload</a>
@@ -30,8 +30,9 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Product Name</th>
-                        <th>HSN</th>
+                        <th>Customer Name</th>
+                        {{-- <th>Customer Name</th> --}}
+                        <th>Mobile No.</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -40,10 +41,10 @@
                     @foreach ($products as $product)
                     <tr>
                         <td>{{ $i++ }}</td>
-                        <td><div class="small">{{ $product->item_name }}</div></td>
-                        <td><div class="small">{{ $product->hsn }}</div></td>
+                        <td><div class="small">{{ $product->customer_name_billing }}</div></td>
+                        <td><div class="small">{{ $product->mobile_no }}</div></td>
                         {{-- <td><a href="{{ route('pdfview', ['id' => $product->id, 'download'=>'pdf']) }}" class="btn btn-primary btn-sm">Export PDF</a></td> --}}
-                        <td><a href="{{ route('view-invoice', ['id' => $product->id]) }}" target="_blank" class="btn btn-primary btn-sm">View Invoice</a></td>
+                        <td><a href="{{ route('view-invoice', ['mobile_no' => $product->mobile_no]) }}" target="_blank" class="btn btn-primary btn-sm">View Invoice</a></td>
                     </tr>
                     @endforeach
                 </tbody>

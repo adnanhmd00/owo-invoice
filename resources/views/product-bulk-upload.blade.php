@@ -16,6 +16,10 @@
         ::-webkit-scrollbar {
         width: 10px;
         }
+        #blink {
+            color: #2d38be;
+            transition: 0.5s;
+        }
     </style>
 </head>
 <body>
@@ -37,7 +41,7 @@
                   @endif
                   <a href="/" class="btn btn-primary btn-sm">Go Home</a>
                   <h1>Bulk Excel Upload</h1>
-                  <small class="text-primary">It is recommended to clear table after previous work is completed or fresh excel is being uploaded.</small>
+                  <small class="text-primary">It is recommended to clear table after previous invoice work is completed or if you're uploading any new excel.</small>
                 </div>
                 <form action="{{ route('bulk-excel-import') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -53,6 +57,33 @@
                 </form>
             </div>
         </div>
+
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="false">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Message</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">&times;</button>
+              </div>
+              <div class="modal-body text-center">
+                <p>If You Haven't Added Products Name, HSN & GST, The invoice will not show accurate data.</p>
+                <p class="small" id="blink">It's recommended to add Products Name, HSN & GST first.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    <script type="text/javascript">
+        $(window).on('load', function() {
+            $('#staticBackdrop').modal('show');
+        });
+    </script>
+    <script type="text/javascript">
+        var blink = document.getElementById('blink');
+        setInterval(function() {
+            blink.style.opacity = (blink.style.opacity == 0 ? 1 : 0);
+        }, 500);
+    </script>
     </section>
   </div>
 </body>

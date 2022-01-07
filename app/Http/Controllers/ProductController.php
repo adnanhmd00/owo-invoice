@@ -16,7 +16,7 @@ use App\Exports\ProductsExport;
 class ProductController extends Controller
 {
     public function index(){
-        $products = ProductExcel::all();
+        $products = ProductExcel::select('customer_name_billing', 'mobile_no')->distinct()->get();
         return view('welcome', compact('products'));
     }
 
@@ -26,7 +26,8 @@ class ProductController extends Controller
     }
 
     public function create(){
-        return view('add-product-hsn');
+        $gstTable = Tin::all();
+        return view('add-product-hsn', compact('gstTable'));
     }
 
     public function store(Request $request){
@@ -38,9 +39,9 @@ class ProductController extends Controller
             ]);
     
             $product = new Product;
-            $product->product_name = $request->product_name;
-            $product->hsn = $request->hsn;
-            $product->gst = $request->gst;
+            $product->product_name = rtrim($request->product_name);
+            $product->hsn = rtrim($request->hsn);
+            $product->gst = rtrim($request->gst);
     
             if($product->save()){
                 return back()->with('success', 'Product Added Successfully');
@@ -59,8 +60,8 @@ class ProductController extends Controller
             ]);
     
             $product = Product::findOrFail($id);
-            $product->product_name = $request->product_name;
-            $product->hsn = $request->hsn;
+            $product->product_name = rtrim($request->product_name);
+            $product->hsn = rtrim($request->hsn);
     
             if($product->save()){
                 return back()->with('success', 'Product Edited Successfully');
@@ -71,8 +72,8 @@ class ProductController extends Controller
         }
     }
 
-    public function showInvoice($id){
-        $items = ProductExcel::findOrFail($id);   
+    public function showInvoice($mobile_no){
+        $items = ProductExcel::where('mobile_no', $mobile_no)->first();   
         $billing_state = Tin::where('state_code', $items->state_code_billing)->first();
         $shipping_state = Tin::where('state_code', $items->state_code_shipping)->first();
         return view('pdfview', compact('items', 'billing_state', 'shipping_state'));
@@ -108,7 +109,12 @@ class ProductController extends Controller
     }
 
     public function truncateTable(){
-        DB::table('product_excels')->truncate();
+        DB::table('product_excels')->delete();
         return back()->with('success', 'Table Cleared Successfully');
+    }
+
+    public function uploadGST(){
+        DB::unprepared(file_get_contents('tins.sql'));
+        return back()->with('success', 'GST Table Added Successfully');
     }
 }

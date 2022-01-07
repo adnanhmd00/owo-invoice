@@ -14,7 +14,7 @@
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <h1 class="text-center bg-secondary text-light">All Products</h1>
+        <h1 class="text-center bg-secondary text-light">All Products & HSN</h1>
         <div class="text-right p-3">
             <a href="/" class="btn btn-primary">Go Home</a>
             <a href="{{ route('showHsn') }}" class="btn btn-primary">Show Product HSN</a>
