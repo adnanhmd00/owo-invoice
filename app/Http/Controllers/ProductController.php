@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Tin;
 use DB;
 use Str;
+use Session;
 use PDF;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
@@ -62,6 +63,7 @@ class ProductController extends Controller
             $product = Product::findOrFail($id);
             $product->product_name = rtrim($request->product_name);
             $product->hsn = rtrim($request->hsn);
+            $product->gst = rtrim($request->gst);
     
             if($product->save()){
                 return back()->with('success', 'Product Edited Successfully');
@@ -95,6 +97,10 @@ class ProductController extends Controller
     }
 
     public function fileImportExport(){
+        if(session()->has('mob_number')){
+            // Session::flush();
+            Session::forget('mob_number'); 
+        }
         return view('product-bulk-upload');
     }
 

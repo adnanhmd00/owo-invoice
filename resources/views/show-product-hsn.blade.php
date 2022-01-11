@@ -33,6 +33,7 @@
                         <th>#</th>
                         <th>Product Name</th>
                         <th>HSN</th>
+                        <th>%</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -44,6 +45,7 @@
                         <td>{{ $i++ }}</td>
                         <td><div class="small">{{ $product->product_name }}</div></td>
                         <td><div class="small">{{ $product->hsn }}</div></td>
+                        <td><div class="small">{{ $product->gst }}%</div></td>
                         <td><button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal-{{ $product->id }}">Edit</button></td>
 
                         <!-- The Modal -->
@@ -68,7 +70,11 @@
                                                 <input type="text" name="hsn" value="{{ $product->hsn }}" class="form-control" placeholder="Enter Product HSN" autocomplete="off">
                                                 @error('hsn') <div class="text-danger small text-left">{{ $message }}</div> @enderror
                                             </div>
-                            
+                                            <div class="form-group text-left">
+                                                <label for="product_name" class="p-0 mb-0">Product GST</label>
+                                                <input type="text" name="gst" value="{{ $product->gst }}" class="form-control" placeholder="Enter Product GST" autocomplete="off">
+                                                @error('gst') <div class="text-danger small text-left">{{ $message }}</div> @enderror
+                                            </div>
                                             <div class="text-center">
                                                 <button class="btn btn-primary">Update Product</button>
                                             </div>
