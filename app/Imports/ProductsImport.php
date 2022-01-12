@@ -18,10 +18,10 @@ class ProductsImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
-        if($row['date'] != '' || $row['customer_address_billing'] != '' || $row['mobile_no'] != '' ){        
+        if($row['month'] != '' || $row['customer_address_billing'] != '' || $row['mobile_no'] != '' ){        
             $i = 1;
             $product_excel = new ProductExcel();
-            $product_excel->date = $row['date'];
+            $product_excel->date = $row['month'];
             $product_excel->customer_name_billing = rtrim($row['customer_name_billing']);
             isset($row['gst_no']) ? rtrim($row['gst_no']) : '';
             $product_excel->gst_no = isset($row['gst_no']) ? rtrim($row['gst_no']) : '';

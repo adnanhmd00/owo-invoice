@@ -64,7 +64,7 @@
 	<tbody><tr style="height:21.75pt">
 	   <td width="513" @if($cess == 1) colspan="12" @else colspan="7" @endif rowspan="5" valign="top" style="width:384.5pt;border:
 		  solid black 1.0pt;padding:0in 0in 0in 0in;height:21.75pt">
-          <img src="{{ asset('owo-water.png') }}" style="width: 100px; padding: 5px;margin-left: 400px; margin-bottom: -140px;" alt="oso.jpd"> 
+          <img src="{{ asset('owo-water.png') }}" style="width: 100px; padding: 5px;@if( $cess == 1) margin-left: 700px; @else margin-left: 400px; @endif margin-bottom: -140px;" alt="oso.jpd"> 
 		  <p class="TableParagraph" style="margin-top:4.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
 			 font-family:Arial,sans-serif">OWO<span style="letter-spacing:.7pt"> </span>Technologies<span style="letter-spacing:.7pt"> </span>Pvt.<span style="letter-spacing:.75pt"> </span>Ltd.</span></b>
@@ -79,8 +79,8 @@
           <br>
 		  {{-- <p class="TableParagraph" style="margin-left:2.85pt;line-height:9.15pt"><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span></p> --}}
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:263.25pt;
-			 margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">GSTIN 06AADCO1175C1ZV<span style="letter-spacing:.05pt"> </span>FSSAI No--10020064002474<span style="letter-spacing:.05pt"> </span></span><span style="font-size:8.0pt;
-			 line-height:108%">GSTIN/UIN:</span><span style="font-size:8.0pt;line-height:
+			 margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">FSSAI No--10020064002474<span style="letter-spacing:.05pt"> </span></span><span style="font-size:8.0pt;
+			 line-height:108%"><br>GSTIN/UIN:</span><span style="font-size:8.0pt;line-height:
 			 108%;letter-spacing:2.5pt"> </span><span style="font-size:8.0pt;line-height:
 			 108%">06AADCO1175C1ZV</span></p>
 		  <p class="TableParagraph" style="margin-left:2.85pt;line-height:9.1pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.4pt"> </span>Name<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:1.4pt"> </span>Haryana,<span style="letter-spacing:-.4pt"> </span>Code<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:-.4pt"> </span>06</span></p>
@@ -235,6 +235,8 @@
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ Str::title($items->customer_address_billing) }}</span></p>
+			 <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Mob:{{ Str::title($items->mobile_no) }}</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">GSTIN/UIN :<span style="letter-spacing:.85pt"> </span>{{ $items->gst_no }}</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
@@ -261,6 +263,8 @@
 		  padding:0in 0in 0in 0in;height:.75in">
 		  <p class="TableParagraph" style="margin-left:2.35pt; margin-top: -50px;"><span style="font-size:
 			 8.0pt">Terms<span style="letter-spacing:-.45pt"> </span>of<span style="letter-spacing:-.45pt"> </span>Delivery</span></p>
+			  <p class="TableParagraph" style="margin-left:2.35pt; margin-top: 10px;"><span style="font-size:
+				8.0pt"><strong>{{ $items->date }} Month Billing</strong></span></p>	
 	   </td>
 	   <td style="height:.75in;border:none" width="0" height="72"></td>
 	</tr>
@@ -434,7 +438,7 @@
 		@foreach($products as $product)
         <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
         0in;margin-left:1.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-        font-family:Arial,sans-serif">{{ Str::title($product->product_name) }}</span></p>        
+        font-family:Arial,sans-serif">{{ Str::title(substr($product->product_name, 0,26)) }}@if(strlen($product->product_name) > 26)...@endif</span></p>        
         @endforeach
 		  <p class="TableParagraph" style="margin-top:.2pt"><span style="font-size:11.5pt;font-family:Times New Roman,serif">&nbsp;</span></p>
 		 @if ($items->state_code_billing == 'HR')
@@ -1467,4 +1471,7 @@
 	   
 	</tr>
   
- </tbody></table></body></html>
+ </tbody></table>
+ <div style="text-align: center; font-family:Arial, Helvetica, sans-serif; margin-bottom: 4px;font-size: 12px;">SUBJECT TO GURGAON, HARYANA JURISDICTION</div>
+ <div style="text-align: center; font-family:Arial, Helvetica, sans-serif; margin-bottom: 4px;font-size: 11px;">This is a Computer Generated Invoice</div>
+</body></html>
