@@ -33,3 +33,10 @@ Route::get('view-invoice/{mobile_no}', [ProductController::class, 'showInvoice']
 Route::get('truncate-table', [ProductController::class, 'truncateTable'])->name('truncateTable');
 Route::get('upload-gst-table', [ProductController::class, 'uploadGST'])->name('uploadGST');
 
+Route::get('banks', [ProductController::class, 'showBanks'])->name('banks');
+Route::get('add-bank-details', [ProductController::class, 'bankDetails'])->name('add-bank-details');
+Route::post('add-bank-details', [ProductController::class, 'addBankDetails'])->name('add-bank-details');
+Route::get('edit-bank-details/{id}', [ProductController::class, 'editBankDetails'])->name('edit-bank-details');
+Route::post('update-bank-details/{id}', [ProductController::class, 'updateBankDetails'])->name('update-bank-details');
+Route::post('bank-status/{id}', [ProductController::class, 'bankStatus'])->name('change-bank-status');
+

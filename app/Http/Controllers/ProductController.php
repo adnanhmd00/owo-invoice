@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ProductExcel;
 use App\Models\Product;
+use App\Models\Bank;
 use App\Models\Tin;
 use DB;
 use Str;
@@ -75,10 +76,11 @@ class ProductController extends Controller
     }
 
     public function showInvoice($mobile_no){
+        $bank = Bank::where('status', 1)->first();
         $items = ProductExcel::where('mobile_no', $mobile_no)->first();   
         $billing_state = Tin::where('state_code', $items->state_code_billing)->first();
         $shipping_state = Tin::where('state_code', $items->state_code_shipping)->first();
-        return view('pdfview', compact('items', 'billing_state', 'shipping_state'));
+        return view('pdfview', compact('items', 'billing_state', 'shipping_state', 'bank'));
     }
     
     public function pdfview(Request $request)
@@ -91,9 +93,75 @@ class ProductController extends Controller
             $str = Str::random(5);
             return $pdf->download($random.$str.'.pdf');
         }
-
-
         return view('pdfview', compact('items'));
+    }
+
+    public function showBanks(){
+        $banks = Bank::all();
+        return view('bank-details', compact('banks'));
+    }
+
+    public function bankDetails(){
+        return view('add-bank-details');
+    }
+
+    public function addBankDetails(Request $request){
+        $validate = $request->validate([
+            'ac_holder' => 'required',
+            'bank_name' => 'required',
+            'ac_no' => 'required',
+            'branch' => 'required',
+            'ifsc' => 'required',
+        ]);
+
+        $bank = new Bank;
+        $bank->ac_holder = $request->ac_holder;
+        $bank->bank_name = $request->bank_name;
+        $bank->ac_no = $request->ac_no;
+        $bank->branch = $request->branch;
+        $bank->ifsc = $request->ifsc;
+
+        if($bank->save()){
+            return redirect()->route('banks')->with('success', 'Bank Details Added');
+        }
+    }
+
+    public function editBankDetails($id){
+        $bank = Bank::findOrFail($id);
+        return view('edit-bank-details', compact('bank'));
+    }
+
+    public function updateBankDetails(Request $request, $id){
+        $validate = $request->validate([
+            'ac_holder' => 'required',
+            'bank_name' => 'required',
+            'ac_no' => 'required',
+            'ifsc' => 'required',
+        ]);
+
+        $bank = Bank::findOrFail($id);
+        $bank->ac_holder = $request->ac_holder;
+        $bank->bank_name = $request->bank_name;
+        $bank->ac_no = $request->ac_no;
+        $bank->branch = $request->branch;
+        $bank->ifsc = $request->ifsc;
+
+        if($bank->save()){
+            return redirect()->route('banks')->with('success', 'Bank Details Edited');
+        }
+    }
+
+    public function bankStatus(Request $request, $id){
+        $bank = Bank::findOrFail($id);
+        $otherbanks = Bank::where('id', '!=', $id)->get();
+        $bank->status = 1;
+        if($bank->save()){
+            foreach($otherbanks as $otherbank){
+                $otherbank->status = 0;
+                $otherbank->save();
+            }
+            return redirect()->route('banks')->with('success', 'Bank Status Activated');
+        }
     }
 
     public function fileImportExport(){

@@ -16,6 +16,7 @@
     <div class="container mt-5">
         <h1 class="text-center bg-secondary text-light">All Orders</h1>
         <div class="text-right p-3">
+            <a href="{{ route('banks') }}" class="btn btn-primary">Show Bank Accounts</a>
             <a href="{{ route('showHsn') }}" class="btn btn-primary">Show Product HSN</a>
             <a href="{{ route('bulk-upload') }}" class="btn btn-primary">Excel Upload</a>
             <a href="{{ route('add-product') }}" class="btn btn-primary">Add Product Name</a>

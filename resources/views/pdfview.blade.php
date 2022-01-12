@@ -1359,19 +1359,19 @@
 		  <p class="TableParagraph"><span style="font-family:Times New Roman,serif">&nbsp;</span></p>
 		  
 		  <p class="TableParagraph" style="margin-left:5.7pt; margin-top: -9px;"><span style="font-size: 8.0pt">:<span style="letter-spacing:1.15pt"> </span></span>
-		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">OWO Technologies Pvt Ltd</span></b>
+		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $bank->ac_holder }}</span></b>
 		  </p>
 
 		  <p class="TableParagraph" style="margin-left:5.7pt; margin-top: -10px;"><span style="font-size: 8.0pt">:<span style="letter-spacing:1.15pt"> </span></span>
-		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">ICICI Bank Ltd (343105000747)</span></b>
+		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $bank->bank_name }} ({{ $bank->ac_no }})</span></b>
 		  </p>
 
 		  <p class="TableParagraph" style="margin-left:5.7pt; margin-top: -10px;"><span style="font-size: 8.0pt">:<span style="letter-spacing:1.15pt"> </span></span>
-		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">343105000747</span></b>
+		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $bank->ac_no }}</span></b>
 		  </p>
 
 		  <p class="TableParagraph" style="margin-left:5.7pt; margin-top: -10px;"><span style="font-size: 8.0pt">:<span style="letter-spacing:1.15pt"> </span></span>
-		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Gurgaon, Haryana & ICIC0003431</span></b>
+		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $bank->branch }}, {{ $bank->ifsc}}</span></b>
 		  </p>
 	   </td>
 	   
