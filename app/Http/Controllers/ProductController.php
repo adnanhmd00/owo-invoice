@@ -174,6 +174,7 @@ class ProductController extends Controller
 
     public function bulkExcelImport(Request $request){
         try{
+            DB::table('product_excels')->delete();
             Excel::import(new ProductsImport, $request->file('file')->store('temp'));
             return back()->with('success', 'Excel Uploaded Successfully');
         }   

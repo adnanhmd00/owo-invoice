@@ -34,7 +34,7 @@
                         @php $i = 1 @endphp
                         @foreach($banks as $bank)
                         <tr>
-                            <td>{{ $i }}</td>
+                            <td>{{ $i++ }}</td>
                             <td>{{ $bank->bank_name }}</td>
                             <td>{{ $bank->ac_holder }}</td>
                             <td>{{ $bank->ac_no }}</td>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>HSN Upload</title>
+    <title>Invoice</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
@@ -14,7 +14,7 @@
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <h1 class="text-center bg-secondary text-light">All Orders</h1>
+        <h1 class="text-center bg-secondary text-light">All Invoices</h1>
         <div class="text-right p-3">
             <a href="{{ route('banks') }}" class="btn btn-primary">Show Bank Accounts</a>
             <a href="{{ route('showHsn') }}" class="btn btn-primary">Show Product HSN</a>

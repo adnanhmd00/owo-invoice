@@ -449,7 +449,7 @@
 		  @else
 		 @foreach ($product_gst as $p_gst)
          <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
-         0in;@if($cess == 1) margin-left:35.85pt; @else margin-left:80.85pt; @endif margin-bottom:.0001pt;line-height:120%"><b><i>
+         0in;@if($cess == 1) margin-left:5.85pt; @else margin-left:80.85pt; @endif margin-bottom:.0001pt;line-height:120%"><b><i>
              <span style="font-size:8.0pt;line-height:120%;font-family:Arial,sans-serif">Output IGST @ {{ $p_gst->gst }}%</span></i></b></p>
          @endforeach
 		 @endif
@@ -459,7 +459,7 @@
              <span style="font-size:8.0pt;line-height:120%;font-family:Arial,sans-serif">Output Cess on GST</span></i></b></p>
 		 @endif
 		 <p class="TableParagraph" style="margin-top:10.05pt;margin-right:0in;margin-bottom:
-         0in;@if($cess == 1) margin-left:65.85pt; @else margin-left:100.85pt; @endif margin-bottom:.0001pt;line-height:120%"><b><i>
+         0in;@if($cess == 1) margin-left:35.85pt; @else margin-left:100.85pt; @endif margin-bottom:.0001pt;line-height:120%"><b><i>
              <span style="font-size:8.0pt;line-height:120%;font-family:Arial,sans-serif">Short & Excess</span></i></b></p>
 	   </td>
 	   <td width="75" valign="top" style="width:56.1pt;border-top:none;border-left:none;
@@ -474,8 +474,11 @@
 		  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 0in 0in 0in;
 		  height:214.75pt">
 		@foreach ($products as $product)
-        <p class="TableParagraph" style="margin-top:6.00pt;padding: .2pt;margin-right:0in;margin-bottom:
-        0in;margin-left:19.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ Str::title($product->quantity) }} {{ Str::lower($product->attribute) }}</span></p>        
+		<p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+          0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
+          8.0pt;font-family:Arial,sans-serif">{{ Str::title($product->quantity) }} {{ Str::lower($product->attribute) }}</span></b></p>
+        {{-- <p class="TableParagraph" style="margin-top:6.00pt;padding: .2pt;margin-right:0in;margin-bottom:
+        0in;margin-left:19.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ Str::title($product->quantity) }} {{ Str::lower($product->attribute) }}</span></p>         --}}
         @endforeach
 	   </td>
 	   <td width="78" colspan="2" valign="top" style="width:58.5pt;border-top:none;
@@ -1134,7 +1137,7 @@
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:35.05pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round($total_tax, 2), 2) }}</span></b></p>
+			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round($total_tax + $val_cess * 12 / 100, 2), 2) }}</span></b></p>
 	   </td>
 	   
 	   <td style="height:11.75pt;border:none" width="0" height="16"></td>
