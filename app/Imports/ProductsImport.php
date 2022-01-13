@@ -36,11 +36,11 @@ class ProductsImport implements ToModel, WithHeadingRow
             $product_excel->state_code_shipping = rtrim($row['state_code_shipping']);
             $product_excel->mobile_no = rtrim($row['mobile_no']);
             $product_excel->product_name = rtrim($row['product_name']);
-            $product_excel->size = rtrim($row['size']);
+            // $product_excel->size = rtrim($row['size']);
             $product_excel->attribute = rtrim(Str::lower($row['attribute']));
             $product_excel->price = rtrim($row['price']);
-            $product_excel->pack_of = rtrim($row['pack_of']);
-            $product_excel->pack_name = rtrim($row['pack_name']);
+            // $product_excel->pack_of = rtrim($row['pack_of']);
+            // $product_excel->pack_name = rtrim($row['pack_name']);
             $product_excel->quantity = rtrim($row['quantity']);
             $products = Product::all();
             foreach($products as $prod){

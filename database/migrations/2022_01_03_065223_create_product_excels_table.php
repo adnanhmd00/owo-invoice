@@ -30,12 +30,12 @@ class CreateProductExcelsTable extends Migration
             $table->string('state_code_shipping');
             $table->string('mobile_no');
             $table->string('product_name');
-            $table->string('size');
+            // $table->string('size');
             $table->string('attribute');
             $table->string('price');
             $table->string('item_cost');
-            $table->string('pack_of');
-            $table->string('pack_name');
+            // $table->string('pack_of');
+            // $table->string('pack_name');
             $table->string('quantity');
             $table->string('hsn')->nullable();
             $table->string('gst')->nullable();
