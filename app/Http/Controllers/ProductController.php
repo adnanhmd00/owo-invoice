@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ProductExcel;
+use App\Models\SaleBill;
 use App\Models\Product;
 use App\Models\Bank;
 use App\Models\Tin;
@@ -20,6 +21,11 @@ class ProductController extends Controller
     public function index(){
         $products = ProductExcel::select('customer_name_billing', 'mobile_no')->distinct()->get();
         return view('welcome', compact('products'));
+    }
+
+    public function saleBill(){
+        $products = SaleBill::select('invoice')->distinct()->get();
+        return view('sale-bill', compact('products'));
     }
 
     public function showHsn(){
@@ -81,6 +87,14 @@ class ProductController extends Controller
         $billing_state = Tin::where('state_code', $items->state_code_billing)->first();
         $shipping_state = Tin::where('state_code', $items->state_code_shipping)->first();
         return view('pdfview', compact('items', 'billing_state', 'shipping_state', 'bank'));
+    }
+
+    public function showSaleInvoice($invoice_no){
+        $bank = Bank::where('status', 1)->first();
+        $items = SaleBill::where('invoice', $invoice_no)->first();   
+        $billing_state = Tin::where('state_code', $items->state_code_billing)->first();
+        $shipping_state = Tin::where('state_code', $items->state_code_shipping)->first();
+        return view('sale-bill-invoice', compact('items', 'billing_state', 'shipping_state', 'bank'));
     }
     
     public function pdfview(Request $request)
@@ -191,5 +205,21 @@ class ProductController extends Controller
     public function uploadGST(){
         DB::unprepared(file_get_contents('tins.sql'));
         return back()->with('success', 'GST Table Added Successfully');
+    }
+
+    public function search(Request $request)
+    {
+       $products = SaleBill::where('product_name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('customer_name_billing', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('hsn', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('mobile_no', 'LIKE', '%' . $request->search . '%')
+                    ->get();
+        if($products->isEmpty()){
+            $request->session()->now('error', 'No Data Found For The Searched Word!');
+            return view('search-result', compact('products'));
+        }else{
+            $request->session()->now('success', 'Search Results Here!');
+            return view('search-result', compact('products'));
+        }
     }
 }
