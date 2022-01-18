@@ -82,11 +82,12 @@
             <ul class="navbar-nav float-right">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Name
+                      {{ Auth::user()->name }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <a class="dropdown-item" href="#">Profile</a>
-                      <a class="dropdown-item" href="#">Logout</a>
+                      <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                      <a class="dropdown-item" href="{{ route('add-new-admin') }}">Add New Admin</a>
+                      <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
                 </li>
             </ul>
         </div>

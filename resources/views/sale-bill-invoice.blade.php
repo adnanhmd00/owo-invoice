@@ -28,7 +28,7 @@
 <?php 
     $total_amount = [];
     foreach($products as $product){
-        $x = round(($product->quantity * $product->item_cost) + (($product->item_cost * $product->quantity) * $product->gst)/100, 2);
+        $x = (($product->quantity * $product->item_cost) + (($product->item_cost * $product->quantity) * $product->gst)/100);
         array_push($total_amount, $x);
     }
     $total_amount = array_sum($total_amount);
@@ -36,7 +36,7 @@
     $total_tax = [];
     $total_qty = [];
     foreach($products as $product){
-        $y = round((($product->item_cost * $product->quantity) * $product->gst)/100, 2);
+        $y = ((($product->item_cost * $product->quantity) * $product->gst)/100);
         $qty = $product->quantity;
         array_push($total_tax, $y);
         array_push($total_qty, $qty);
@@ -62,49 +62,49 @@
 	<table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" style="margin:auto">
 	
 	<tbody><tr style="height:21.75pt">
-	   <td width="513" @if($cess == 1) colspan="12" @else colspan="7" @endif rowspan="5" valign="top" style="width:384.5pt;border:
-		  solid black 1.0pt;padding:0in 0in 0in 0in;height:21.75pt">
-          <img src="{{ asset('owo-water.png') }}" style="width: 100px; padding: 5px;@if( $cess == 1) margin-left: 700px; @else margin-left: 400px; @endif margin-bottom: -140px;" alt="oso.jpd"> 
-		  <p class="TableParagraph" style="margin-top:4.35pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">OWO<span style="letter-spacing:.7pt"> </span>Technologies<span style="letter-spacing:.7pt"> </span>Pvt.<span style="letter-spacing:.75pt"> </span>Ltd.</span></b>
-			</p>
-		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:237.95pt;
-			 margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">1106<span style="letter-spacing:
-			 .45pt"> </span>B4,<span style="letter-spacing:.5pt"> </span>11<span style="letter-spacing:.45pt"> </span>Floor,<span style="letter-spacing:.5pt">
-			 </span>Spaze<span style="letter-spacing:.45pt"> </span>ITech<span style="letter-spacing:.5pt"> </span>Park<span style="letter-spacing:-1.85pt">
-			 </span></span><span style="font-size:8.0pt;line-height:108%">Sohna<span style="letter-spacing:-.45pt"> </span>Road,<span style="letter-spacing:-.45pt">
-			 </span>Sector-49,</span><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span>
-		  </p>
-          <br>
-		  {{-- <p class="TableParagraph" style="margin-left:2.85pt;line-height:9.15pt"><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span></p> --}}
-		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:263.25pt;
-			 margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">FSSAI No--10020064002474<span style="letter-spacing:.05pt"> </span></span><span style="font-size:8.0pt;
-			 line-height:108%"><br>GSTIN/UIN:</span><span style="font-size:8.0pt;line-height:
-			 108%;letter-spacing:2.5pt"> </span><span style="font-size:8.0pt;line-height:
-			 108%">06AADCO1175C1ZV</span></p>
-		  <p class="TableParagraph" style="margin-left:2.85pt;line-height:9.1pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.4pt"> </span>Name<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:1.4pt"> </span>Haryana,<span style="letter-spacing:-.4pt"> </span>Code<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:-.4pt"> </span>06</span></p>
-		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">E-Mail<span style="letter-spacing:.85pt"> </span>:<span style="letter-spacing:.85pt"> </span></span><a href="mailto:anil.kumar@owo.in"><span style="font-size:8.0pt;color:windowtext;text-decoration:none">anil.kumar@owo.in</span></a></p>
-	   </td>
-	   <td width="254" colspan="7" valign="top" style="width:190.5pt;border:solid black 1.0pt;
-		  border-left:none;padding:0in 0in 0in 0in;height:21.75pt">
-		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Invoice<span style="letter-spacing:-.45pt"> </span>No.</span></p>
-		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.35pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ $items->invoice }}</span></b></p>
-	   </td>
-	   <td width="250" colspan="5" valign="top" style="width:187.5pt;border:solid black 1.0pt;
-		  border-left:none;padding:0in 0in 0in 0in;height:21.75pt">
-		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Dated</span></p>
-		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:1.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ date("d-M-y", strtotime($items->date)) }}</span></b></p>
-	   </td>
-	   <td style="height:21.75pt;border:none" width="0" height="29"></td>
-	</tr>
+		<td width="513" @if($cess == 1) colspan="12" @else colspan="7" @endif rowspan="5" valign="top" style="width:384.5pt;border:
+		   solid black 1.0pt;padding:0in 0in 0in 0in;height:21.75pt">
+		   <img src="{{ asset('owo-water.png') }}" style="width: 100px; padding: 5px;@if( $cess == 1) margin-left: 700px; @else margin-left: 400px; @endif margin-bottom: -140px;" alt="oso.jpd"> 
+		   <p class="TableParagraph" style="padding: 3px 0px; margin-top:4.35pt;margin-right:0in;margin-bottom:
+			  0in;margin-left:2.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
+			  font-family:Arial,sans-serif">OWO<span style="letter-spacing:.7pt"> </span>Technologies<span style="letter-spacing:.7pt"> </span>Pvt.<span style="letter-spacing:.75pt"> </span>Ltd.</span></b>
+			 </p>
+		   <p class="TableParagraph" style="padding: 3px 0px; margin-top:.8pt;margin-right:237.95pt;
+			  margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">1106<span style="letter-spacing:
+			  .45pt"> </span>B4,<span style="letter-spacing:.5pt"> </span>11<span style="letter-spacing:.45pt"> </span>Floor,<span style="letter-spacing:.5pt">
+			  </span>Spaze<span style="letter-spacing:.45pt"> </span>ITech<span style="letter-spacing:.5pt"> </span>Park<span style="letter-spacing:-1.85pt">
+			  </span></span><span style="font-size:8.0pt;line-height:108%">Sohna<span style="letter-spacing:-.45pt"> </span>Road,<span style="letter-spacing:-.45pt">
+			  </span>Sector-49,</span><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span>
+		   </p>
+		   <br>
+		   {{-- <p class="TableParagraph" style="margin-left:2.85pt;line-height:9.15pt"><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span></p> --}}
+		   <p class="TableParagraph" style="padding: 3px 0px; margin-top:-13.2pt;margin-right:263.25pt;
+			  margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">FSSAI No--10020064002474<span style="letter-spacing:.05pt"> </span></span><span style="font-size:8.0pt;
+			  line-height:108%"><br>GSTIN/UIN:</span><span style="font-size:8.0pt;line-height:
+			  108%;letter-spacing:2.5pt"> </span><span style="font-size:8.0pt;line-height:
+			  108%">06AADCO1175C1ZV</span></p>
+		   <p class="TableParagraph" style="padding: 3px 0px; margin-top: 0px; margin-left:2.85pt;line-height:9.1pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.4pt"> </span>Name<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:1.4pt"> </span>Haryana,<span style="letter-spacing:-.4pt"> </span>Code<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:-.4pt"> </span>06</span></p>
+		   <p class="TableParagraph" style="padding: 3px 0px; margin-top: -13px;margin-right:0in;margin-bottom:
+			  0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">E-Mail<span style="letter-spacing:.85pt"> </span>:<span style="letter-spacing:.85pt"> </span></span><a href="mailto:anil.kumar@owo.in"><span style="font-size:8.0pt;color:windowtext;text-decoration:none">anil.kumar@owo.in</span></a></p>
+		</td>
+		<td width="254" colspan="7" valign="top" style="width:190.5pt;border:solid black 1.0pt;
+		   border-left:none;padding:0in 0in 0in 0in;height:21.75pt">
+		   <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
+			  0in;margin-left:2.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Invoice<span style="letter-spacing:-.45pt"> </span>No.</span></p>
+		   <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
+			  0in;margin-left:2.35pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
+			  font-family:Arial,sans-serif">{{ $items->invoice }}</span></b></p>
+		</td>
+		<td width="250" colspan="5" valign="top" style="width:187.5pt;border:solid black 1.0pt;
+		   border-left:none;padding:0in 0in 0in 0in;height:21.75pt">
+		   <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
+			  0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Dated</span></p>
+		   <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
+			  0in;margin-left:1.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
+			  font-family:Arial,sans-serif">{{ date("d-M-y", strtotime($items->date)) }}</span></b></p>
+		</td>
+		<td style="height:21.75pt;border:none" width="0" height="29"></td>
+	 </tr>
 	<tr style="height:20.75pt">
 	   <td width="254" colspan="7" valign="top" style="width:190.5pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
