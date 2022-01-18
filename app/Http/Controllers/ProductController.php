@@ -197,6 +197,10 @@ class ProductController extends Controller
         }
     }
 
+    public function dataExport(){
+        $products = SaleBill::all();
+        return view('data-export', compact('products'));
+    }
     public function truncateTable(){
         DB::table('product_excels')->delete();
         return back()->with('success', 'Table Cleared Successfully');

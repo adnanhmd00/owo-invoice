@@ -96,8 +96,68 @@
         </div>
     </div>
 </nav>
-@yield('content')
-
+<div class="container mt-5">
+    <h3 class="text-center bg-secondary text-light">Export Data</h3>
+    <div class="card  p-3 shadow table-responsive">
+        <table id="example" class="table text-center normal-font" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>#</th> 
+                    <th>Month</th>
+                    <th>Invoice No</th>
+                    <th>GST No</th>
+                    <th>Mobile No</th>
+                    <th>Customer Name(Billing)</th>
+                    <th>Customer Address (Billing)</th>
+                    <th>State (Billing)</th>
+                    <th>State Code (Billing)</th>
+                    <th>Customer Name (Shipping)</th>
+                    <th>Customer Address (Shipping)</th>
+                    <th>State (Shipping)</th>
+                    <th>State Code (Shipping)</th>
+                    <th>Product Name</th>
+                    <th>Attribute</th>
+                    <th>Price</th>
+                    <th>Item Cost</th>
+                    <th>Quantity</th>
+                    <th>HSN</th>
+                    <th>GST</th>
+                    <th>Date</th>
+                    {{-- <th>Action</th> --}}
+                </tr>
+            </thead>
+            <tbody>
+                @php $i = 1 @endphp
+                @foreach ($products as $product)
+                <tr>
+                    <td>{{ $i++ }}</td>
+                    <td>{{ $product->customer_name_billing }}</td>
+                    <td>{{ $product->invoice }}</td>
+                    <td>{{ $product->gst_no }}</td>
+                    <td>{{ $product->mobile_no }}</td>
+                    <td>{{ $product->customer_name_billing }}</td>
+                    <td>{{ $product->customer_address_billing }}</td>
+                    <td>{{ $product->state_billing }}</td>
+                    <td>{{ $product->state_code_billing }}</td>
+                    <td>{{ $product->customer_name_shipping }}</td>
+                    <td>{{ $product->customer_address_shipping }}</td>
+                    <td>{{ $product->state_shipping }}</td>
+                    <td>{{ $product->state_code_shipping }}</td>
+                    <td>{{ $product->product_name }}</td>
+                    <td>{{ $product->attribute }}</td>
+                    <td>{{ $product->price }}</td>
+                    <td>{{ $product->item_cost }}</td>
+                    <td>{{ $product->quantity }}</td>
+                    <td>{{ $product->hsn }}</td>
+                    <td>{{ $product->gst }}%</td>
+                    <td>{{ date($product->created_at) }}</td>
+                    {{-- <td><a href="{{ route('view-sale-invoice', ['invoice_no' => $product->invoice]) }}" target="_blank" class="btn btn-primary btn-sm">View Invoice</a></td> --}}
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -106,16 +166,20 @@
 <script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.html5.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('#example').DataTable({
-            scrollX: true,
-            "aLengthMenu": [
-                [10, 25, 50, 75, -1],
-                [10, 25, 50, 75, "All"]
-            ],
-            "pageLength": 10,
-        });
-    });
+$(document).ready(function() {
+      $('#example').DataTable( {
+          scrollX: true,
+          dom: 'lBfrtip',
+          buttons: [    
+            {
+              extend: 'excel',
+              text: 'Export In Excel'
+            },
+          ],
+          "aLengthMenu": [[10, 25, 50, 75, -1], [10, 25, 50, 75, "All"]],
+          "pageLength": 10,
+      } );
+} );
 </script>
 
 <script type="text/javascript">
