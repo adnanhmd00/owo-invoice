@@ -538,19 +538,19 @@
 			 font-family:Times New Roman,serif">&nbsp;</span></p>
 		 @if($items->state_code_billing == 'HR')
 		 @foreach ($product_gst as $p_gst)
-        <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+        <p class="TableParagraph" style="margin-top:28.05pt;margin-right:0in;margin-bottom:
         0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">%</span></p>
          <p class="TableParagraph" style="margin-top:1.8pt;margin-right:0in;margin-bottom:
         0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">%</span></p>
         @endforeach
 		 @else
 		 @foreach ($product_gst as $p_gst)
-         <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+         <p class="TableParagraph" style="margin-top:28.05pt;margin-right:0in;margin-bottom:
 		 0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">%</span></p>
          @endforeach
 		 @endif
 		 @if($cess == 1)
-         <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
+         <p class="TableParagraph" style="margin-top:28.05pt;margin-right:0in;margin-bottom:
 		 0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">%</span></p>
 		 @endif
 	   </td>
@@ -743,10 +743,19 @@
 			 <?php
 			  	if($total_amount - intval($total_amount) >= 0.5){
 					$total_amount = intval($total_amount) + 1;
-					echo '₹'.number_format(round($total_amount, 2), 2);
+					if($cess == 1){
+						echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount * (12/100),2) ,2);
+					}else{
+						echo '₹'.number_format(round($total_amount, 2), 2);
+					}
 				}else{
 					$total_amount = intval($total_amount);
-					echo '₹'.number_format(round($total_amount, 2), 2);
+					if($cess == 1){
+						echo '₹'.number_format(round($total_amount + $val_cess * 12/100,2) ,2); // Symbol
+						// echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount  12/100 ,2) ,2);
+					}else{
+						echo '₹'.number_format(round($total_amount, 2), 2);
+					}
 				}
 			 ?>
 			  {{-- {{ number_format(round($total_amount, 2), 2) }} --}}

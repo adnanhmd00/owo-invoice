@@ -201,6 +201,12 @@ class ProductController extends Controller
         $products = SaleBill::all();
         return view('data-export', compact('products'));
     }
+
+    public function dataSalesExport(){
+        $products = SaleBill::select('invoice')->distinct()->get();
+        return view('data-sales-export', compact('products'));
+    }
+
     public function truncateTable(){
         DB::table('product_excels')->delete();
         return back()->with('success', 'Table Cleared Successfully');

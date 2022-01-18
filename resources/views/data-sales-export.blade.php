@@ -1,3 +1,4 @@
+<?php ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -103,33 +104,10 @@
             <thead>
                 <tr>
                     <th>#</th> 
-                    <th>Month</th>
                     <th>Date</th>
                     <th>Invoice No</th>
-                    <th>GST No</th>
-                    <th>Mobile No</th>
                     <th>Customer Name(Billing)</th>
-                    <th>Customer Address (Billing)</th>
-                    <th>State (Billing)</th>
-                    <th>State Code (Billing)</th>
-                    <th>Customer Name (Shipping)</th>
-                    <th>Customer Address (Shipping)</th>
-                    <th>State (Shipping)</th>
-                    <th>State Code (Shipping)</th>
-                    <th>Product Name</th>
-                    <th>Attribute</th>
-                    <th>Price</th>
-                    <th>Item Cost</th>
-                    <th>Quantity</th>
-                    <th>HSN</th>
-                    <th>GST</th>
-                    <th>CGST</th>
-                    <th>SGST</th>
-                    <th>IGST</th>
-                    <th>Cess</th>
-                    <th>Total Tax</th>
                     <th>Total Price</th>
-                    {{-- <th>Action</th> --}}
                 </tr>
             </thead>
             <tbody>
@@ -137,53 +115,23 @@
                 @foreach ($products as $product)
                 <tr>
                     <td>{{ $i++ }}</td>
-                    <td>{{ $product->date }}</td>
-                    <td>{{ date($product->created_at) }}</td>
+                    <?php
+                        $customer = App\Models\SaleBill::where('invoice', $product->invoice)->first();
+                        $prods = App\Models\SaleBill::where('invoice', $product->invoice)->get();
+                        $val_cess = App\Models\SaleBill::where('gst', 28)->where('invoice', $product->invoice)->sum('taxable_amount');
+                        $total_amount = [];
+                        foreach($prods as $product){
+                            $x = round(($product->quantity * $product->item_cost) + (($product->item_cost * $product->quantity) * $product->gst)/100, 2);
+                            array_push($total_amount, $x);
+                        }
+                        $total_amount = array_sum($total_amount);
+                        $total = App\Models\SaleBill::where('invoice', $product->invoice)->sum('price');
+                     ?>
+                    <td>{{ date($customer->created_at) }}</td>
                     <td>{{ $product->invoice }}</td>
-                    <td>{{ $product->gst_no }}</td>
-                    <td>{{ $product->mobile_no }}</td>
-                    <td>{{ $product->customer_name_billing }}</td>
-                    <td>{{ $product->customer_address_billing }}</td>
-                    <td>{{ $product->state_billing }}</td>
-                    <td>{{ $product->state_code_billing }}</td>
-                    <td>{{ $product->customer_name_shipping }}</td>
-                    <td>{{ $product->customer_address_shipping }}</td>
-                    <td>{{ $product->state_shipping }}</td>
-                    <td>{{ $product->state_code_shipping }}</td>
-                    <td>{{ $product->product_name }}</td>
-                    <td>{{ $product->attribute }}</td>
-                    <td>{{ $product->price }}</td>
-                    <td>{{ $product->item_cost }}</td>
-                    <td>{{ $product->quantity }}</td>
-                    <td>{{ $product->hsn }}</td>
-                    <td>@if($product->gst < 28) {{ $product->gst }}% @else 40% @endif</td>
-
-                    <td>@if($product->state_code_billing == 'HR') {{ number_format(round((($product->item_cost * $product->quantity) * $product->gst/2)/100, 2), 2) }} @endif</td>
-                    <td>@if($product->state_code_billing == 'HR') {{ number_format(round((($product->item_cost * $product->quantity) * $product->gst/2)/100, 2), 2) }} @endif</td>
-                    <td>@if($product->state_code_billing != 'HR') {{ number_format(round((($product->item_cost * $product->quantity) * $product->gst)/100, 2), 2) }} @else</td>
-
-                    {{-- <td>@if($product->state_code_billing == 'HR') {{ $product->gst/2 }}% @endif</td>
-                    <td>@if($product->state_code_billing == 'HR') {{ $product->gst/2 }}% @endif</td>
-                    <td>@if($product->state_code_billing != 'HR') {{ $product->gst }}% @else</td> --}}
-                    <td>&nbsp;</td>
-                    @endif
-                    @if($product->gst >=28) 
-                        <td>{{ number_format(round((($product->item_cost * $product->quantity) * 12)/100, 2), 2) }}</td>
-                    @endif
-                    <td>
-                        @if($product->gst >= 28)
-                        {{ number_format(round((($product->item_cost * $product->quantity) * $product->gst)/100, 2), 2) + number_format(round((($product->item_cost * $product->quantity) * 12)/100, 2), 2) }}
-                        @else
-                        {{ number_format(round((($product->item_cost * $product->quantity) * $product->gst)/100, 2), 2) }}
-                        @endif
-                    </td>
-                    <td>
-                        @if($product->gst >= 28)
-                        {{  number_format(round(number_format(round($product->item_cost * $product->quantity, 2), 2) + (number_format(round((($product->item_cost * $product->quantity) * $product->gst)/100, 2), 2) + number_format(round((($product->item_cost * $product->quantity) * 12)/100, 2), 2)) ,2),2) }}
-                        @else
-                        {{ number_format(round(number_format(round($product->item_cost * $product->quantity, 2), 2) + (number_format(round((($product->item_cost * $product->quantity) * $product->gst)/100, 2), 2)) ,2) ,2) }}
-                        @endif
-                    </td>
+                    <td>{{ $customer->customer_name_billing }}</td>
+                    <td>{{ number_format(round($total_amount + $val_cess *12/100,2 ),2) }}</td>
+                    {{-- <td>@if($cess == 1) {{ number_format(round($total ,2),2) }} @else {{ number_format(round($total ,2),2) }} @endif</td> --}}
                     {{-- <td><a href="{{ route('view-sale-invoice', ['invoice_no' => $product->invoice]) }}" target="_blank" class="btn btn-primary btn-sm">View Invoice</a></td> --}}
                 </tr>
                 @endforeach
