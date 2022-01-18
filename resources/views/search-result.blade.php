@@ -35,6 +35,7 @@
                         <th>#</th>
                         <th>Customer Name</th>
                         <th>Product Name</th>
+                        <th>Quantity</th>
                         <th>HSN</th>
                         <th>Mobile No.</th>
                         <th>Action</th>
@@ -49,9 +50,10 @@
                             <?php $customer = App\Models\SaleBill::where('invoice', $product->invoice)->first();?>
                             {{ $customer->customer_name_billing }}
                         </div></td>
-                        <td><div class="small">{{ $customer->mobile_no }}</div></td>
                         <td><div class="small">{{ substr($product->product_name, 0, 26) }}@if($product->product_name >= 26)...@endif</div></td>
+                        <td><div class="small">{{ $product->quantity }}</div></td>
                         <td><div class="small">{{ $product->hsn }}</div></td>
+                        <td><div class="small">{{ $product->mobile_no }}</div></td>
                         <td><a href="{{ route('view-sale-invoice', ['invoice_no' => $product->invoice]) }}" target="_blank" class="btn btn-primary btn-sm">View Invoice</a></td>
                     </tr>
                     @endforeach

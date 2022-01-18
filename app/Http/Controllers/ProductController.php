@@ -213,6 +213,7 @@ class ProductController extends Controller
                     ->orWhere('customer_name_billing', 'LIKE', '%' . $request->search . '%')
                     ->orWhere('hsn', 'LIKE', '%' . $request->search . '%')
                     ->orWhere('mobile_no', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('quantity', 'LIKE', '%' . $request->search . '%')
                     ->get();
         if($products->isEmpty()){
             $request->session()->now('error', 'No Data Found For The Searched Word!');
