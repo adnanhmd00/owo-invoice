@@ -19,7 +19,7 @@ use App\Exports\ProductsExport;
 class ProductController extends Controller
 {
     public function index(){
-        $products = ProductExcel::select('customer_name_billing', 'mobile_no')->distinct()->get();
+        $products = ProductExcel::select('customer_name_billing', 'mobile_no', 'invoice')->distinct()->get();
         return view('welcome', compact('products'));
     }
 
@@ -95,6 +95,171 @@ class ProductController extends Controller
         $billing_state = Tin::where('state_code', $items->state_code_billing)->first();
         $shipping_state = Tin::where('state_code', $items->state_code_shipping)->first();
         return view('sale-bill-invoice', compact('items', 'billing_state', 'shipping_state', 'bank'));
+    }
+
+    public function editInvoice($invoice_no){
+        $products = ProductExcel::where('invoice', $invoice_no)->get();
+        $detail = ProductExcel::where('invoice', $invoice_no)->first();
+        return view('edit-invoice', compact('products', 'detail'));
+    }
+
+    public function submitEditInvoice(Request $request, $invoice_no){
+        $detail = ProductExcel::where('invoice', $invoice_no)->first();
+        session()->put('detail', $detail);
+        $inputs = $request->all();
+        $final_array = [];
+        unset($inputs['_token']);
+        ProductExcel::where('invoice', $detail['invoice'])->delete();
+        SaleBill::where('invoice', $detail['invoice'])->delete();
+        for($i=0; $i < sizeof($inputs['product_name']); $i++){
+            // $product_name = $inputs['product_name'][$i];
+            // $attribute = $inputs['attribute'][$i];
+            // $price = $inputs['price'][$i];
+            // $quantity = $inputs['quantity'][$i];
+            // array_push($final_array, [$product_name, $attribute, $price, $quantity]);
+            $product = new ProductExcel;
+            $sale_bill = new SaleBill;
+            $product->date = session()->get('detail')['date'];
+            $sale_bill->date = session()->get('detail')['date'];
+            
+            $product->invoice = session()->get('detail')['invoice'];
+            $sale_bill->invoice = session()->get('detail')['invoice'];
+
+            $product->invoice = session()->get('detail')['invoice'];
+            $sale_bill->invoice = session()->get('detail')['invoice'];
+
+            $product->customer_name_billing = session()->get('detail')['customer_name_billing'];
+            $sale_bill->customer_name_billing = session()->get('detail')['customer_name_billing'];
+
+            $product->gst_no = session()->get('detail')['gst_no'];
+            $sale_bill->gst_no = session()->get('detail')['gst_no'];
+
+            $product->customer_address_billing = session()->get('detail')['customer_address_billing'];
+            $sale_bill->customer_address_billing = session()->get('detail')['customer_address_billing'];
+
+            $product->state_billing = session()->get('detail')['state_billing'];
+            $sale_bill->state_billing = session()->get('detail')['state_billing'];
+
+            $product->state_code_billing = session()->get('detail')['state_code_billing'];
+            $sale_bill->state_code_billing = session()->get('detail')['state_code_billing'];
+
+            $product->customer_name_shipping = session()->get('detail')['customer_name_shipping'];
+            $sale_bill->customer_name_shipping = session()->get('detail')['customer_name_shipping'];
+
+            $product->customer_address_shipping = session()->get('detail')['customer_address_shipping'];
+            $sale_bill->customer_address_shipping = session()->get('detail')['customer_address_shipping'];
+
+            $product->state_shipping = session()->get('detail')['state_shipping'];
+            $sale_bill->state_shipping = session()->get('detail')['state_shipping'];
+
+            $product->state_code_shipping = session()->get('detail')['state_code_shipping'];
+            $sale_bill->state_code_shipping = session()->get('detail')['state_code_shipping'];
+
+            $product->mobile_no = session()->get('detail')['mobile_no'];
+            $sale_bill->mobile_no = session()->get('detail')['mobile_no'];
+
+            $product->product_name = $inputs['product_name'][$i];
+            $sale_bill->product_name = $inputs['product_name'][$i];
+
+            $product->attribute = $inputs['attribute'][$i];
+            $sale_bill->attribute = $inputs['attribute'][$i];
+
+            $product->price = $inputs['price'][$i];
+            $sale_bill->price = $inputs['price'][$i];
+
+            $product->quantity = $inputs['quantity'][$i];
+            $sale_bill->quantity = $inputs['quantity'][$i];
+
+
+            // ------------------------------------------------------------------------------------------
+            $products = Product::all();
+            foreach($products as $prod){
+                if(rtrim($inputs['product_name'][$i]) == rtrim($prod->product_name)){
+                    $product->hsn = rtrim($prod->hsn);
+                    $sale_bill->hsn = rtrim($prod->hsn);
+
+                    $product->gst = rtrim($prod->gst);
+                    $sale_bill->gst = rtrim($prod->gst);
+
+                    $single_price = $inputs['price'][$i] * (100/(100 + $prod->gst));
+
+
+                    $product->gst_value = (round($single_price, 2) * $inputs['quantity'][$i]) * rtrim($prod->gst)/100;
+                    $sale_bill->gst_value = (round($single_price, 2) * $inputs['quantity'][$i]) * rtrim($prod->gst)/100;
+
+                }
+            }
+
+            $product->item_cost = round($single_price, 2);
+            $sale_bill->item_cost = round($single_price, 2);
+            
+            // $product->gst_value = (round($single_price, 2) * $inputs['quantity'][$i]) * rtrim($prod->gst)/100;
+            // $sale_bill->gst_value = (round($single_price, 2) * $inputs['quantity'][$i]) * rtrim($prod->gst)/100;
+
+            $product->taxable_amount = (round($single_price, 2) * $inputs['quantity'][$i]);
+            $sale_bill->taxable_amount = (round($single_price, 2) * $inputs['quantity'][$i]);
+
+            // ------------------------------------------------------------------------------------------
+            $product->save();
+            $sale_bill->save();
+        }
+        // \Log::info($final_array);die;
+        return redirect()->route('home')->with('success', 'Invoice Edited Successfully');
+
+    }
+
+
+    public function submitSaleEditInvoice(Request $request, $invoice_no){
+        $detail = SaleBill::where('invoice', $invoice_no)->first();
+        session()->put('detail', $detail);
+        $inputs = $request->all();
+        $final_array = [];
+        unset($inputs['_token']);
+        SaleBill::where('invoice', $detail['invoice'])->delete();
+        for($i=0; $i < sizeof($inputs['product_name']); $i++){
+            // $product_name = $inputs['product_name'][$i];
+            // $attribute = $inputs['attribute'][$i];
+            // $price = $inputs['price'][$i];
+            // $quantity = $inputs['quantity'][$i];
+            // array_push($final_array, [$product_name, $attribute, $price, $quantity]);
+            $product = new SaleBill;
+            $product->date = session()->get('detail')['date'];
+            $product->invoice = session()->get('detail')['invoice'];
+            $product->invoice = session()->get('detail')['invoice'];
+            $product->customer_name_billing = session()->get('detail')['customer_name_billing'];
+            $product->gst_no = session()->get('detail')['gst_no'];
+            $product->customer_address_billing = session()->get('detail')['customer_address_billing'];
+            $product->state_billing = session()->get('detail')['state_billing'];
+            $product->state_code_billing = session()->get('detail')['state_code_billing'];
+            $product->customer_name_shipping = session()->get('detail')['customer_name_shipping'];
+            $product->customer_address_shipping = session()->get('detail')['customer_address_shipping'];
+            $product->state_shipping = session()->get('detail')['state_shipping'];
+            $product->state_code_shipping = session()->get('detail')['state_code_shipping'];
+            $product->mobile_no = session()->get('detail')['mobile_no'];
+            $product->product_name = $inputs['product_name'][$i];
+            $product->attribute = $inputs['attribute'][$i];
+            $product->price = $inputs['price'][$i];
+            $product->quantity = $inputs['quantity'][$i];
+
+            // ------------------------------------------------------------------------------------------
+            $products = Product::all();
+            foreach($products as $prod){
+                if(rtrim($inputs['product_name'][$i]) == rtrim($prod->product_name)){
+                    $product->hsn = rtrim($prod->hsn);
+                    $product->gst = rtrim($prod->gst);
+                    $single_price = $inputs['price'][$i] * (100/(100 + $prod->gst));
+                }
+            }
+            $product->item_cost = round($single_price, 2);
+            $product->gst_value = (round($single_price, 2) * $inputs['quantity'][$i]) * rtrim($prod->gst)/100;
+            $product->taxable_amount = (round($single_price, 2) * $inputs['quantity'][$i]);
+            // ------------------------------------------------------------------------------------------
+            $product->save();
+            \Log::info($product);
+        }
+        // \Log::info($final_array);die;
+        return redirect()->route('home')->with('success', 'Invoice Edited Successfully');
+
     }
     
     public function pdfview(Request $request)

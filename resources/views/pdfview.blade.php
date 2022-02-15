@@ -744,7 +744,8 @@
 			  	if($total_amount - intval($total_amount) >= 0.5){
 					$total_amount = intval($total_amount) + 1;
 					if($cess == 1){
-						echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount * (12/100),2) ,2);
+						// echo '₹'.number_format(round($total_amount, 2) + round( $total_amount * (12/100),2), 2);
+						echo '₹'.number_format(round($total_amount + $val_cess * 12/100,2) ,2); // Symbol
 					}else{
 						echo '₹'.number_format(round($total_amount, 2), 2);
 					}

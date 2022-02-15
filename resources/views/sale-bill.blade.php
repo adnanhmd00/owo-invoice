@@ -37,6 +37,7 @@
                         </div></td>
                         <td><div class="small">{{ $customer->mobile_no }}</div></td>
                         <td><a href="{{ route('view-sale-invoice', ['invoice_no' => $product->invoice]) }}" target="_blank" class="btn btn-primary btn-sm">View Invoice</a></td>
+                        <td><a href="/edit-sale-invoice/{{ $product->invoice }}" target="_blank" class="btn btn-primary btn-sm">Edit</a></td>
                     </tr>
                     @endforeach
                 </tbody>
