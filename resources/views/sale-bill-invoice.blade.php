@@ -1085,7 +1085,7 @@
 		 @foreach($product_gst as $p_gst)
 		  <?php $val = App\Models\SaleBill::where('gst', $p_gst->gst)->sum('taxable_amount');?>
 		  <p class="TableParagraph" style="margin-top:.35pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:20.65pt;margin-bottom:.0001pt;line-height:8.4pt; "><span style="font-size:8.0pt">@if($p_gst->gst >= 28) {{ number_format(round((($val) * 12/100) , 2), 2) }} @else 0  @endif</span></p>
+			 0in;margin-left:20.65pt;margin-bottom:.0001pt;line-height:8.4pt; "><span style="font-size:8.0pt">@if($p_gst->gst >= 28)<?php $cess_sum = []; ?>  {{ number_format(round((($val) * 12/100) , 2), 2) }} <?php array_push($cess_sum, $val * 12/100); ?> @else 0  @endif</span></p>
 			@endforeach	
 	   </td>
 	   @endif
@@ -1147,7 +1147,7 @@
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:35.05pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round($val_cess * 12 / 100, 2), 2) }}</span></b></p>
+			 8.0pt;font-family:Arial,sans-serif">{{ $cess_sum[0] }}</span></b></p>
 	   </td>
 	  @endif
 	   <td width="89" colspan="2" valign="top" style="width:67.1pt;border-top:none;
