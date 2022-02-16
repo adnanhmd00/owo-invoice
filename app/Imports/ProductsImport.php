@@ -94,8 +94,13 @@ class ProductsImport implements ToModel, WithHeadingRow
                     $invoice_ids->save();
                 }
             }
-            $product_excel->invoice = 'OWO-'.date('y').'-'.date('y', strtotime('+1 year')).'-'.str_pad($invoice_ids->invoice_id, 4, '0', STR_PAD_LEFT);
-            $sale_bill->invoice = 'OWO-'.date('y').'-'.date('y', strtotime('+1 year')).'-'.str_pad($invoice_ids->invoice_id, 4, '0', STR_PAD_LEFT);
+            if(date('m') < 04){
+                $date = date('y')-1 .'/'. date('y');
+            }else{
+                $date = date('y').'/'.date('y', strtotime('+1 year'));
+            }
+            $product_excel->invoice = 'OWO'.'/'.$date.'/'.str_pad($invoice_ids->invoice_id, 4, '0', STR_PAD_LEFT);
+            $sale_bill->invoice = 'OWO'.'/'.$date.'/'.str_pad($invoice_ids->invoice_id, 4, '0', STR_PAD_LEFT);
             $product_excel->gst_value = ($product_excel->item_cost * $product_excel->quantity) * $product_excel->gst/100;
             $sale_bill->gst_value = ($product_excel->item_cost * $product_excel->quantity) * $product_excel->gst/100;
             $product_excel->taxable_amount = ($product_excel->item_cost * $product_excel->quantity);

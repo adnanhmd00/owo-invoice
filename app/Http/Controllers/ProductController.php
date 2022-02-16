@@ -91,20 +91,26 @@ class ProductController extends Controller
 
     public function showSaleInvoice($invoice_no){
         $bank = Bank::where('status', 1)->first();
-        $items = SaleBill::where('invoice', $invoice_no)->first();   
+        $items = SaleBill::where('invoice', str_replace('-','/', $invoice_no))->first();   
         $billing_state = Tin::where('state_code', $items->state_code_billing)->first();
         $shipping_state = Tin::where('state_code', $items->state_code_shipping)->first();
         return view('sale-bill-invoice', compact('items', 'billing_state', 'shipping_state', 'bank'));
     }
 
     public function editInvoice($invoice_no){
-        $products = ProductExcel::where('invoice', $invoice_no)->get();
-        $detail = ProductExcel::where('invoice', $invoice_no)->first();
+        $products = ProductExcel::where('invoice', str_replace('-','/', $invoice_no))->get();
+        $detail = ProductExcel::where('invoice', str_replace('-', '/', $invoice_no))->first();
         return view('edit-invoice', compact('products', 'detail'));
     }
 
+    public function editSaleInvoice($invoice_no){
+        $products = SaleBill::where('invoice', str_replace('-','/', $invoice_no))->get();
+        $detail = SaleBill::where('invoice', str_replace('-', '/', $invoice_no))->first();
+        return view('edit-sale-invoice', compact('products', 'detail'));
+    }
+
     public function submitEditInvoice(Request $request, $invoice_no){
-        $detail = ProductExcel::where('invoice', $invoice_no)->first();
+        $detail = ProductExcel::where('invoice', str_replace('-','/', $invoice_no))->first();
         session()->put('detail', $detail);
         $inputs = $request->all();
         $final_array = [];
@@ -210,7 +216,7 @@ class ProductController extends Controller
 
 
     public function submitSaleEditInvoice(Request $request, $invoice_no){
-        $detail = SaleBill::where('invoice', $invoice_no)->first();
+        $detail = SaleBill::where('invoice', str_replace('-', '/', $invoice_no))->first();
         session()->put('detail', $detail);
         $inputs = $request->all();
         $final_array = [];
@@ -255,7 +261,6 @@ class ProductController extends Controller
             $product->taxable_amount = (round($single_price, 2) * $inputs['quantity'][$i]);
             // ------------------------------------------------------------------------------------------
             $product->save();
-            \Log::info($product);
         }
         // \Log::info($final_array);die;
         return redirect()->route('home')->with('success', 'Invoice Edited Successfully');

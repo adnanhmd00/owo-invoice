@@ -39,7 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('view-sale-invoice/{invoice_no}', [ProductController::class, 'showSaleInvoice'])->name('view-sale-invoice');
     Route::get('edit-invoice/{invoice_no}', [ProductController::class, 'editInvoice'])->name('edit-invoice');
     Route::post('edit-invoice/{invoice_no}', [ProductController::class, 'submitEditInvoice'])->name('edit-invoice');
-    Route::get('edit-sale-invoice/{invoice_no}', [ProductController::class, 'editInvoice'])->name('edit-sale-invoice');
+    Route::get('edit-sale-invoice/{invoice_no}', [ProductController::class, 'editSaleInvoice'])->name('edit-sale-invoice');
     Route::post('edit-sale-invoice/{invoice_no}', [ProductController::class, 'submitSaleEditInvoice'])->name('edit-sale-invoice');
     Route::get('truncate-table', [ProductController::class, 'truncateTable'])->name('truncateTable');
     Route::get('upload-gst-table', [ProductController::class, 'uploadGST'])->name('uploadGST');
