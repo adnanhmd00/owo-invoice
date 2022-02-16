@@ -17,7 +17,7 @@
                 <div>Invoice No: <strong>{{ $detail->invoice }}</strong></div>
                 <div>Address: <strong>{{ $detail->customer_address_billing }}</strong></div>
             </div>
-            <form action="{{ route('edit-sale-invoice', str_replace('/', '-', $detail->invoice)) }}" method="post">
+            <form action="{{ route('edit-sale-invoice', $detail->invoice) }}" method="post">
                 @csrf
                 <table class="table">
                     <thead>

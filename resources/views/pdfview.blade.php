@@ -1,3 +1,7 @@
+<?php 
+	$inv_id = explode('-', $items->invoice);
+	$inv_id = $inv_id[0].'/'.$inv_id[1].'-'.$inv_id[2].'/'.$inv_id[3];
+?>
 <?php
 	$products = App\Models\ProductExcel::where('mobile_no', $items->mobile_no)->get();
 	$product_gst = App\Models\ProductExcel::where('mobile_no', $items->mobile_no)->select('gst')->distinct()->get();
@@ -103,7 +107,7 @@
 			 0in;margin-left:2.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Invoice<span style="letter-spacing:-.45pt"> </span>No.</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.35pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ $items->invoice }}</span></b></p>
+			 font-family:Arial,sans-serif">{{ $inv_id }}</span></b></p>
 	   </td>
 	   <td width="250" colspan="5" valign="top" style="width:187.5pt;border:solid black 1.0pt;
 		  border-left:none;padding:0in 0in 0in 0in;height:21.75pt">
@@ -140,7 +144,7 @@
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.35pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ $items->invoice }}</span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif;letter-spacing:3.3pt"> </span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">dt.<span style="letter-spacing:.75pt"> </span>{{ date("d-M-y", strtotime($items->created_at)) }}</span></b></p>
+			 font-family:Arial,sans-serif">{{ $inv_id }}</span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif;letter-spacing:3.3pt"> </span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">dt.<span style="letter-spacing:.75pt"> </span>{{ date("d-M-y", strtotime($items->created_at)) }}</span></b></p>
 	   </td>
 	   <td width="250" colspan="5" valign="top" style="width:187.5pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -1428,7 +1432,7 @@
 	   <td width="511" colspan="9" valign="top" style="width:383.35pt;border:none;
 		  border-left:solid black 1.0pt;padding:0in 0in 0in 0in;height:18.8pt">
 		  <p class="TableParagraph" style="margin-top:.65pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:9.0pt">{{ $items->invoice }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:9.0pt">{{ $inv_id }}</span></p>
 	   </td>
 	   <td style="height:18.8pt;border:none" width="0" height="25"></td>
 	</tr>
