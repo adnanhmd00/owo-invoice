@@ -52,9 +52,11 @@
 {{-- For Calculating total cess item start --}}
 @foreach($product_gst as $p_gst)
 <?php $val = App\Models\ProductExcel::where('gst', $p_gst->gst)->sum('taxable_amount');?>
-	@if($p_gst->gst >= 28)
-	 <?php $cess_sum = []; ?>
+@if($p_gst->gst >= 28)
+	<?php $cess_sum = []; ?>
 	 <?php array_push($cess_sum, $val * 12/100); ?>
+	@else
+	<?php $cess_sum[0] = 0; ?>
 	@endif
 @endforeach	
 {{-- For Calculating total cess item end --}}
@@ -603,7 +605,7 @@
 			 @if($cess == 1)
 			 <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ $cess_sum[0] }}</span></b></p> {{-- 12 percent --}}
+			 8.0pt;font-family:Arial,sans-serif">{{ round($cess_sum[0], 2) }}</span></b></p> {{-- 12 percent --}}
 			 @endif
 			 <p class="TableParagraph" style="margin-top:10.05pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
@@ -825,7 +827,7 @@
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
 		   <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
-			  0in;margin-left:20.1pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $cess_sum[0] }}</span></p>
+			  0in;margin-left:20.1pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ round($cess_sum[0], 2) }}</span></p>
 		</td>
 		<td colspan="1" valign="top" style="width:45.1pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -1167,7 +1169,7 @@
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:35.05pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ $cess_sum[0] }}</span></b></p>
+			 8.0pt;font-family:Arial,sans-serif">{{ round($cess_sum[0], 2) }}</span></b></p>
 	   </td>
 	  @endif
 	   <td width="89" colspan="2" valign="top" style="width:67.1pt;border-top:none;

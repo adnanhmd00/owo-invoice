@@ -71,11 +71,8 @@
                 <li class="nav-item @if(Route::is('bulk-upload')) actives @endif">
                     <a class="nav-link btn text-light btn-primary btn-sm mx-2" href="{{ route('bulk-upload') }}">Upload Excel</a>
                 </li>
-                <li class="nav-item @if(Route::is('data-sales-export')) actives @endif">
+                <li class="nav-item @if(Route::is('bulk-upload')) actives @endif">
                     <a class="nav-link btn text-light btn-primary btn-sm mx-2" href="{{ route('data-sales-export') }}">Export Data in Excel</a>
-                </li>
-                <li class="nav-item @if(Route::is('monthly-bill')) actives @endif">
-                    <a class="nav-link btn text-light btn-primary btn-sm mx-2" href="{{ route('monthly-bill') }}">Export Monthly Bill</a>
                 </li>
                 @if(Route::is('add-product'))
                 @if ($gstTable->isEmpty())
@@ -101,71 +98,37 @@
 </nav>
 <div class="container mt-5">
     <h3 class="text-center bg-secondary text-light">Export Data</h3>
-    <div class="card  p-3 shadow table-responsive">
-        <table id="example" class="table text-center normal-font" style="width:100%;">
-            <thead>
-                <tr>
-                    <th>#</th> 
-                    <th>Date</th>
-                    <th>Invoice No</th>
-                    <th>Customer Name(Billing)</th>
-                    <th>Total Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php $i = 1 @endphp
-                @foreach ($products as $product)
-                <tr>
-                    <td>{{ $i++ }}</td>
-                    <?php
-                        $customer = App\Models\SaleBill::where('invoice', $product->invoice)->first();
-                        $prods = App\Models\SaleBill::where('invoice', $product->invoice)->get();
-                        $val_cess = App\Models\SaleBill::where('gst','>=', 28)->where('invoice', $product->invoice)->sum('taxable_amount');
-                        $total_amount = [];
-                        $cess = 0;
-                        foreach($prods as $product){
-                            if($product->gst >= 28){
-                                $cess = 1;
-                            }
-                            $x = round(($product->quantity * $product->item_cost) + (($product->item_cost * $product->quantity) * $product->gst)/100, 2);
-                            array_push($total_amount, $x);
-                        }
-                        $total_amount = array_sum($total_amount);
-                        $total = App\Models\SaleBill::where('invoice', $product->invoice)->sum('price');
-                     ?>
-                    <td>{{ date($customer->created_at) }}</td>
-                    <td>{{ $product->invoice }}</td>
-                    <td>{{ $customer->customer_name_billing }}</td>
-                    
-                    <?php
-                        if($total_amount - intval($total_amount) >= 0.5){
-                            $total_amount = intval($total_amount) + 1;
-                            if($cess == 1){
-                                // echo '₹'.number_format(round($total_amount, 2) + round( $total_amount * (12/100),2), 2);
-                                echo '<td>'.number_format(round($total_amount + ($val_cess * 12/100)) ,2).'</td>'; // Symbol
-                            }else{
-                                echo '<td>'.number_format(round($total_amount, 2), 2).'</td>';
-                            }
-                        }else{
-                            $total_amount = intval($total_amount);
-                            if($cess == 1){
-                                echo '<td>'.number_format(round($total_amount + $val_cess * 12/100,2) ,2).'</td>'; // Symbol
-                                // echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount  12/100 ,2) ,2);
-                            }else{
-                                echo '<td>'.number_format(round($total_amount, 2), 2).'</td>';
-                            }
-                        }
-                    ?>
-
-                    {{-- <td>{{ number_format(round($total_amount + $val_cess * 12/100,2 ),2) }}</td> --}}
-                    
-                    {{-- <td>@if($cess == 1) {{ number_format(round($total ,2),2) }} @else {{ number_format(round($total ,2),2) }} @endif</td> --}}
-                    {{-- <td><a href="{{ route('view-sale-invoice', ['invoice_no' => $product->invoice]) }}" target="_blank" class="btn btn-primary btn-sm">View Invoice</a></td> --}}
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+    <form action="{{ route('monthly-bill-export') }}" method="post">
+        @csrf
+        <div class="row">
+            <div class="col-md-4">
+                <select name="month" id="" class="form-control">
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select name="year" id="" class="form-control">
+                    <option value="<?php echo date('Y')-1; ?>"><?php echo date('Y')-1; ?></option>
+                    <option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary btn-block">Search</button>
+            </div>
+        </div>
+    </form>
+    
 </div>
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>

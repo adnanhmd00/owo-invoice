@@ -74,6 +74,9 @@
                 <li class="nav-item @if(Route::is('data-sales-export')) actives @endif">
                     <a class="nav-link btn text-light btn-primary btn-sm mx-2" href="{{ route('data-sales-export') }}">Export Data in Excel</a>
                 </li>
+                <li class="nav-item @if(Route::is('data-sales-export')) actives @endif">
+                    <a class="nav-link btn text-light btn-primary btn-sm mx-2" href="{{ route('monthly-bill') }}">Export Monthly Bill</a>
+                </li>
                 @if(Route::is('add-product'))
                 @if ($gstTable->isEmpty())
                 <li class="nav-item">

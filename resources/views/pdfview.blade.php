@@ -6,7 +6,7 @@
 	$products = App\Models\ProductExcel::where('mobile_no', $items->mobile_no)->get();
 	$product_gst = App\Models\ProductExcel::where('mobile_no', $items->mobile_no)->select('gst')->distinct()->get();
 ?>
-<?php $val_cess = App\Models\ProductExcel::where('gst', 28)->where('mobile_no', $items->mobile_no)->sum('taxable_amount'); ?>
+<?php $val_cess = App\Models\ProductExcel::where('gst','>=', 28)->where('mobile_no', $items->mobile_no)->sum('taxable_amount'); ?>
 <?php
 	$gst_sum = [];
 	foreach($product_gst as $p_gst){
@@ -56,6 +56,8 @@
 	@if($p_gst->gst >= 28)
 	 <?php $cess_sum = []; ?>
 	 <?php array_push($cess_sum, $val * 12/100); ?>
+	 @else
+	<?php $cess_sum[0] = 0; ?>
 	@endif
 @endforeach	
 {{-- For Calculating total cess item end --}}
@@ -824,7 +826,7 @@
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
 		   <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
-			  0in;margin-left:20.1pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $cess_sum[0] }}</span></p>
+			  0in;margin-left:20.1pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ round($cess_sum[0], 2) }}</span></p>
 		</td>
 		<td colspan="1" valign="top" style="width:45.1pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -1166,7 +1168,7 @@
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:35.05pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ $cess_sum[0] }}</span></b></p>
+			 8.0pt;font-family:Arial,sans-serif">{{ round($cess_sum[0], 2) }}</span></b></p>
 	   </td>
 	  @endif
 	   <td width="89" colspan="2" valign="top" style="width:67.1pt;border-top:none;

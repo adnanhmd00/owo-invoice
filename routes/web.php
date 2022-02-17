@@ -28,8 +28,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('bulk-upload', [ProductController::class, 'fileImportExport'])->name('bulk-upload');
     Route::post('bulk-excel-import', [ProductController::class, 'bulkExcelImport'])->name('bulk-excel-import');
-    Route::get('export-data-in-excel', [ProductController::class, 'dataExport'])->name('data-export');
+    // Route::get('export-data-in-excel', [ProductController::class, 'dataExport'])->name('data-export');
     Route::get('export-sales-data-in-excel', [ProductController::class, 'dataSalesExport'])->name('data-sales-export');
+    Route::get('monthly-bill', [ProductController::class, 'monthlyBill'])->name('monthly-bill');
+    Route::post('export-monthly-bill-in-excel', [ProductController::class, 'monthlyBillExport'])->name('monthly-bill-export');
 
     // Route::get('pdfview',array('as'=>'pdfview','uses'=>[ProductController::class,'pdfview']));
 

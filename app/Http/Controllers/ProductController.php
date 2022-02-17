@@ -377,6 +377,26 @@ class ProductController extends Controller
         return view('data-sales-export', compact('products'));
     }
 
+    public function monthlyBill(){
+        $products = SaleBill::select('invoice')->distinct()->get();
+        return view('monthly-bill', compact('products'));
+    }
+
+    public function monthlyBillExport(Request $request){
+        $products = SaleBill::where('date', 'LIKE', '%' . $request->month . '%')
+                    ->where('created_at', 'LIKE', '%' . $request->year . '%')
+                    ->select('invoice')
+                    ->distinct()->get();
+        $month = $request->month;
+        if($products->isEmpty()){
+            $request->session()->now('error', 'No Data Found For The Searched Word!');
+            return view('monthly-bill-search-result', compact('products', 'month'));
+        }else{
+            $request->session()->now('success', 'Search Results Here!');
+            return view('monthly-bill-search-result', compact('products', 'month'));
+        }
+    }
+
     public function truncateTable(){
         DB::table('product_excels')->delete();
         return back()->with('success', 'Table Cleared Successfully');

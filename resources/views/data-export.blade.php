@@ -72,7 +72,7 @@
                     <a class="nav-link btn text-light btn-primary btn-sm mx-2" href="{{ route('bulk-upload') }}">Upload Excel</a>
                 </li>
                 <li class="nav-item @if(Route::is('bulk-upload')) actives @endif">
-                    <a class="nav-link btn text-light btn-primary btn-sm mx-2" href="{{ route('data-export') }}">Export Data in Excel</a>
+                    <a class="nav-link btn text-light btn-primary btn-sm mx-2" href="{{ route('data-sales-export') }}">Export Data in Excel</a>
                 </li>
                 @if(Route::is('add-product'))
                 @if ($gstTable->isEmpty())
