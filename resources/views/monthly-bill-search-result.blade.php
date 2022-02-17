@@ -340,7 +340,7 @@
                     <td>
                          {{-- For Calculating total cess item start --}}
                         <?php 
-                                $cess_sum = [];
+                            $cess_sum = [];
                             foreach($product_gst as $p_gst){
                                 $val = App\Models\SaleBill::where('gst', $p_gst->gst)->sum('taxable_amount');
                                 if($p_gst->gst >= 28){

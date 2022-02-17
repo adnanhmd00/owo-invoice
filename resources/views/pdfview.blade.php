@@ -56,10 +56,10 @@
 	@if($p_gst->gst >= 28)
 	 <?php $cess_sum = []; ?>
 	 <?php array_push($cess_sum, $val * 12/100); ?>
-	 @else
-	<?php $cess_sum[0] = 0; ?>
+	 <?php $cess_sums = array_sum($cess_sum); ?>
 	@endif
 @endforeach	
+
 {{-- For Calculating total cess item end --}}
 <html><head></head><body>
 	<style>
@@ -602,7 +602,7 @@
 			 @if($cess == 1)
 			 <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ $cess_sum[0] }}</span></b></p> {{-- 12 percent --}}
+			 8.0pt;font-family:Arial,sans-serif">{{ round($cess_sums, 2) }}</span></b></p> {{-- 12 percent --}}
 			 @endif
 			 <p class="TableParagraph" style="margin-top:10.05pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
@@ -611,7 +611,7 @@
 			<?php 
 				if($total_amount - intval($total_amount) >= 0.5){
 					// dd($total_amount + $cess_sum[0]);
-					echo number_format(round(ceil($total_amount + $cess_sum[0]) - ($total_amount + $cess_sum[0]), 2),2);
+					echo number_format(round(ceil($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2),2);
 				}else{
 					// $total_amount = intval($total_amount);
 					echo number_format(round(floor($total_amount) - $total_amount, 2),2);
@@ -768,14 +768,14 @@
 					$total_amount = intval($total_amount) + 1;
 					if($cess == 1){
 						// echo '₹'.number_format(round($total_amount, 2) + round( $total_amount * (12/100),2), 2);
-						echo '₹'.number_format(round($total_amount + $cess_sum[0]) ,2); // Symbol
+						echo '₹'.number_format(round($total_amount + $cess_sums) ,2); // Symbol
 					}else{
 						echo '₹'.number_format(round($total_amount, 2), 2);
 					}
 				}else{
 					$total_amount = intval($total_amount);
 					if($cess == 1){
-						echo '₹'.number_format(round($total_amount + $val_cess * 12/100,2) ,2); // Symbol
+						echo '₹'.number_format(round($total_amount + $cess_sums) ,2); // Symbol
 						// echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount  12/100 ,2) ,2);
 					}else{
 						echo '₹'.number_format(round($total_amount, 2), 2);
@@ -826,7 +826,7 @@
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
 		   <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
-			  0in;margin-left:20.1pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ round($cess_sum[0], 2) }}</span></p>
+			  0in;margin-left:20.1pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ round($cess_sums, 2) }}</span></p>
 		</td>
 		<td colspan="1" valign="top" style="width:45.1pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -948,7 +948,7 @@
 		  none;padding:0in 0in 0in 0in;height:15.75pt">
 		  <p class="TableParagraph" style="margin-top:3.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Amount<span style="letter-spacing:.55pt"> </span>Chargeable<span style="letter-spacing:
-			 .55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount + $cess_sum[0]))) }} Only</span></b>
+			 .55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount + $cess_sums))) }} Only</span></b>
 		  </p>
 	   </td>
  
@@ -1168,7 +1168,7 @@
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:35.05pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ round($cess_sum[0], 2) }}</span></b></p>
+			 8.0pt;font-family:Arial,sans-serif">{{ round($cess_sums, 2) }}</span></b></p>
 	   </td>
 	  @endif
 	   <td width="89" colspan="2" valign="top" style="width:67.1pt;border-top:none;
@@ -1176,7 +1176,7 @@
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:35.05pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round($total_tax + $val_cess * 12 / 100, 2), 2) }}</span></b></p>
+			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round($total_tax + $cess_sums, 2), 2) }}</span></b></p>
 	   </td>
 	   
 	   <td style="height:11.75pt;border:none" width="0" height="16"></td>
