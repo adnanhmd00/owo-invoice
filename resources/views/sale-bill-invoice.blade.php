@@ -51,13 +51,14 @@
 ?>
 {{-- For Calculating total cess item start --}}
 @foreach($product_gst as $p_gst)
-<?php $val = App\Models\ProductExcel::where('gst', $p_gst->gst)->sum('taxable_amount');?>
+<?php $val = App\Models\SaleBill::where('gst', $p_gst->gst)->sum('taxable_amount');?>
 	@if($p_gst->gst >= 28)
 	 <?php $cess_sum = []; ?>
 	 <?php array_push($cess_sum, $val * 12/100); ?>
 	 <?php $cess_sums = array_sum($cess_sum); ?>
 	@endif
 @endforeach	
+
 {{-- For Calculating total cess item end --}}
 
 <html><head></head><body>
@@ -289,7 +290,7 @@
 		  <p class="TableParagraph" style="margin-top:1.2pt;margin-right:2.05pt;
 			 margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:11.0pt"><span style="font-size:8.0pt">Sl<span style="letter-spacing:-1.75pt"> </span></span><span style="font-size:8.0pt">No.</span></p>
 	   </td>
-	   <td width="264" rowspan="2" valign="top" style="width:197.9pt;border-top:none;
+	   <td width="264" rowspan="2" valign="top" style="width:335.9pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:13.35pt">
 		  <p class="TableParagraph" style="margin-top:3.0pt;margin-right:0in;margin-bottom:
@@ -525,9 +526,9 @@
 		  @if ($items->state_code_billing == 'HR')
 		  @foreach ($product_gst as $p_gst)
           <p class="TableParagraph" style="margin-top:-.05pt;margin-right:0in;margin-bottom:
-             0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; padding: .4pt;">{{ $p_gst->gst/2 }}</span></p>
+             0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; padding: .4pt;">{{ $p_gst->gst/2 }} %</span></p>
             <p class="TableParagraph" style="margin-top:1.8pt;margin-right:0in;margin-bottom:
-            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $p_gst->gst/2 }}</span></p>
+            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $p_gst->gst/2 }} %</span></p>
           @endforeach
 			@else
 			@foreach ($product_gst as $p_gst)
@@ -537,25 +538,31 @@
 			@endif
 			@if($cess == 1)
 			<p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
-            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">12</span></p>
+            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">12 %</span></p>
 			@endif
 	   </td>
 	   <td width="32" valign="top" style="width:24.0pt;border-top:none;border-left:none;
 		  border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;padding:0in 0in 0in 0in;
 		  height:214.75pt">
-		 @foreach ($products as $product)
+
+		 {{-- @foreach ($products as $product)
          <p class="TableParagraph" style="margin-top:6.35pt;padding: .4pt;margin-right:0in;margin-bottom:
          0in;margin-left:7.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $product->pack_name }}</span></p>
          @endforeach
 		  <p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
-		  <p class="TableParagraph" style="margin-top:-36.2pt"><span style="font-size:11.5pt;
-			 font-family:Times New Roman,serif">&nbsp;</span></p>
+		 @if($cess == 1)
+		 <p class="TableParagraph" style="margin-top:-38.2pt"><span style="font-size:11.5pt;
+			font-family:Times New Roman,serif">&nbsp;</span></p>
+		@else
+		<p class="TableParagraph" style="margin-top:-78.2pt"><span style="font-size:11.5pt;
+			font-family:Times New Roman,serif">&nbsp;</span></p>
+		@endif
 
 		<p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
 		<p class="TableParagraph" style="margin-top:-36.2pt"><span style="font-size:11.5pt;
    font-family:Times New Roman,serif">&nbsp;</span></p>
 		 <p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
-		 <p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
+		  
 		 @if($items->state_code_billing == 'HR')
 		 @foreach ($product_gst as $p_gst)
         <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
@@ -572,7 +579,8 @@
 		 @if($cess == 1)
          <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
 		 0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">%</span></p>
-		 @endif
+		 @endif --}}
+
 	   </td>
 	   <td width="79" colspan="1" valign="top" style="width:50.0pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -610,16 +618,26 @@
 			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
 			 8.0pt;font-family:Arial,sans-serif">
 			 {{-- Short & Excess Start --}}
-			<?php 
-				if($total_amount - intval($total_amount) >= 0.5){
-					// dd($total_amount + $cess_sum[0]);
-					echo number_format(round(ceil($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2),2);
-				}else{
-					// $total_amount = intval($total_amount);
-					echo number_format(round(floor($total_amount) - $total_amount, 2),2);
-				}
-			?> 
-			{{-- Short & Excess End --}}
+			 <?php 
+			 if($cess == 1){
+				 if($total_amount - intval($total_amount) >= 0.5){
+					 // dd($total_amount + $cess_sum[0]);
+					 echo number_format(round(ceil($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2),2);
+				 }else{
+					 // $total_amount = intval($total_amount);
+					 echo number_format(round(floor($total_amount) - $total_amount, 2),2);
+				 }	
+			 }else{
+				 if($total_amount - intval($total_amount) >= 0.5){
+					 // dd($total_amount + $cess_sum[0]);
+					 echo number_format(round(ceil($total_amount) - ($total_amount), 2),2);
+				 }else{
+					 // $total_amount = intval($total_amount);
+					 echo number_format(round(floor($total_amount) - $total_amount, 2),2);
+				 }	
+			 }
+			 ?> 
+			 {{-- Short & Excess End --}}
 			</span></b></p>
 	   </td>
 	   <td width="79" colspan="3" valign="top" style="width:59.0pt;border-top:none;
@@ -946,10 +964,17 @@
 	   <td colspan="18" valign="top" style="width:383.35pt;border-top:none;
 		  border-left:solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:
 		  none;padding:0in 0in 0in 0in;height:15.75pt">
-		  <p class="TableParagraph" style="margin-top:3.35pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Amount<span style="letter-spacing:.55pt"> </span>Chargeable<span style="letter-spacing:
-			 .55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount + $cess_sums))) }} Only</span></b>
-		  </p>
+		 @if($cess == 1)
+		 <p class="TableParagraph" style="margin-top:3.35pt;margin-right:0in;margin-bottom:
+			0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Amount<span style="letter-spacing:.55pt"> </span>Chargeable<span style="letter-spacing:
+			.55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount + $cess_sums))) }} Only</span></b>
+		</p>
+		@else
+	  <p class="TableParagraph" style="margin-top:3.35pt;margin-right:0in;margin-bottom:
+			0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Amount<span style="letter-spacing:.55pt"> </span>Chargeable<span style="letter-spacing:
+			.55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount))) }} Only</span></b>
+		</p>
+		@endif
 	   </td>
  
  
@@ -1372,10 +1397,17 @@
 	<tr style="height:16.45pt">
 	   <td width="511" colspan="7" valign="top" style="width:383.35pt;border:none;
 		  border-left:solid black 1.0pt;padding:0in 0in 0in 0in;height:16.45pt">
-		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:9.1pt"><span style="font-size:8.0pt">Tax<span style="letter-spacing:.45pt"> </span>Amount<span style="letter-spacing:.45pt"> </span>(in<span style="letter-spacing:.45pt"> </span>words)<span style="letter-spacing:1.0pt"> </span>:</span><span style="font-size:8.0pt;
-			 letter-spacing:3.5pt"> </span><b><span style="font-size:8.0pt;font-family:
-			 Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_tax))) }} Only</span></b></p>
+		 @if($cess == 1)
+		 <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+		 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:9.1pt"><span style="font-size:8.0pt">Tax<span style="letter-spacing:.45pt"> </span>Amount<span style="letter-spacing:.45pt"> </span>(in<span style="letter-spacing:.45pt"> </span>words)<span style="letter-spacing:1.0pt"> </span>:</span><span style="font-size:8.0pt;
+		 letter-spacing:3.5pt"> </span><b><span style="font-size:8.0pt;font-family:
+		 Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_tax + $cess_sums))) }} Only</span></b></p>
+		 @else
+		 <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+		 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:9.1pt"><span style="font-size:8.0pt">Tax<span style="letter-spacing:.45pt"> </span>Amount<span style="letter-spacing:.45pt"> </span>(in<span style="letter-spacing:.45pt"> </span>words)<span style="letter-spacing:1.0pt"> </span>:</span><span style="font-size:8.0pt;
+		 letter-spacing:3.5pt"> </span><b><span style="font-size:8.0pt;font-family:
+		 Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_tax))) }} Only</span></b></p>
+		 @endif
 	   </td>
 	   <td width="132" colspan="7" rowspan="5" valign="top" style="width:98.85pt;border: none;border-bottom:solid black 1.0pt;padding:0in 0in 0in 0in;height:16.45pt">
 		  <p class="TableParagraph"><span style="font-size:10.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>

@@ -19,12 +19,12 @@ use App\Exports\ProductsExport;
 class ProductController extends Controller
 {
     public function index(){
-        $products = ProductExcel::select('customer_name_billing', 'mobile_no', 'invoice')->distinct()->get();
+        $products = ProductExcel::select('customer_name_billing', 'mobile_no', 'invoice')->orderBy('invoice', 'desc')->distinct()->get();
         return view('welcome', compact('products'));
     }
 
     public function saleBill(){
-        $products = SaleBill::select('invoice')->distinct()->get();
+        $products = SaleBill::select('invoice')->orderBy('invoice', 'desc')->distinct()->get();
         return view('sale-bill', compact('products'));
     }
 
@@ -263,7 +263,7 @@ class ProductController extends Controller
             $product->save();
         }
         // \Log::info($final_array);die;
-        return redirect()->route('home')->with('success', 'Invoice Edited Successfully');
+        return redirect()->route('sale-bill')->with('success', 'Invoice Edited Successfully');
 
     }
     

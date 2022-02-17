@@ -12,6 +12,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Invoice</th>
                         <th>Customer Name</th>
                         <th>Mobile No.</th>
                         <th>Action</th>
@@ -22,6 +23,7 @@
                     @foreach ($products as $product)
                     <tr>
                         <td>{{ $i++ }}</td>
+                        <td>{{ $product->invoice }}</td>
                         <td><div class="small">{{ $product->customer_name_billing }}</div></td>
                         <td><div class="small">{{ $product->mobile_no }}</div></td>
                         <td><a href="{{ route('view-invoice', ['mobile_no' => $product->mobile_no]) }}" target="_blank" class="btn btn-primary btn-sm">View Invoice</a></td>

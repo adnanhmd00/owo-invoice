@@ -21,6 +21,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Invoice</th>
                         <th>Customer Name</th>
                         <th>Mobile No.</th>
                         <th>Action</th>
@@ -31,8 +32,9 @@
                     @foreach ($products as $product)
                     <tr>
                         <td>{{ $i++ }}</td>
+                        <?php $customer = App\Models\SaleBill::where('invoice', $product->invoice)->first();?>
+                        <td>{{ $customer->invoice }}</td>
                         <td><div class="small">
-                            <?php $customer = App\Models\SaleBill::where('invoice', $product->invoice)->first();?>
                             {{ $customer->customer_name_billing }}
                         </div></td>
                         <td><div class="small">{{ $customer->mobile_no }}</div></td>
