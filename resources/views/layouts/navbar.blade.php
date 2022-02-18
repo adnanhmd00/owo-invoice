@@ -91,8 +91,10 @@
                       {{ Auth::user()->name }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
-                      <a class="dropdown-item" href="{{ route('add-new-admin') }}">Add New Admin</a>
+                        @if(Auth::user()->type == 'super-admin')
+                        <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                        <a class="dropdown-item" href="{{ route('add-new-admin') }}">Add New Admin</a>
+                      @endif
                       <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
                 </li>
             </ul>

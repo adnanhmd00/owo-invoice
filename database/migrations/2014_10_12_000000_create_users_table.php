@@ -17,6 +17,14 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('added_by');
+            $table->string('type');
+            $table->string('state');
+            $table->string('city');
+            $table->string('address');
+            $table->string('pincode');
+            $table->string('fssai');
+            $table->string('gst');
+            $table->string('state_code');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

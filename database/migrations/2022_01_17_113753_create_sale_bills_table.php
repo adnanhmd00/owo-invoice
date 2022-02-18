@@ -41,6 +41,12 @@ class CreateSaleBillsTable extends Migration
             $table->string('gst')->nullable();
             $table->string('gst_value')->nullable();
             $table->string('taxable_amount')->nullable();
+            $table->string('admin_fssai');
+            $table->string('admin_gst');
+            $table->string('admin_address');
+            $table->string('admin_city');
+            $table->string('admin_state_code');
+            $table->string('admin_state');
             $table->timestamps();
         });
     }

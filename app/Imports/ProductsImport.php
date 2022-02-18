@@ -72,6 +72,13 @@ class ProductsImport implements ToModel, WithHeadingRow
             $product_excel->item_cost = round($single_price, 2);
             $sale_bill->item_cost = round($single_price, 2);
             // $gst = $single_price + ($single_price * (5/100));
+
+            $sale_bill->admin_fssai = Auth::user()->fssai;
+            $sale_bill->admin_gst = Auth::user()->gst;
+            $sale_bill->admin_address = Auth::user()->address;
+            $sale_bill->admin_city = Auth::user()->city;
+            $sale_bill->admin_state_code = Auth::user()->state_code;
+            $sale_bill->admin_state = Auth::user()->state;
             $product_excel->save();
             $sale_bill->save();
             $p_invoice = ProductExcel::where('mobile_no', rtrim($product_excel->mobile_no))->first();

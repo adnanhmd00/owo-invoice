@@ -86,20 +86,16 @@
 			  font-family:Arial,sans-serif">OWO<span style="letter-spacing:.7pt"> </span>Technologies<span style="letter-spacing:.7pt"> </span>Pvt.<span style="letter-spacing:.75pt"> </span>Ltd.</span></b>
 			 </p>
 		   <p class="TableParagraph" style="padding: 3px 0px; margin-top:.8pt;margin-right:237.95pt;
-			  margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">1106<span style="letter-spacing:
-			  .45pt"> </span>B4,<span style="letter-spacing:.5pt"> </span>11<span style="letter-spacing:.45pt"> </span>Floor,<span style="letter-spacing:.5pt">
-			  </span>Spaze<span style="letter-spacing:.45pt"> </span>ITech<span style="letter-spacing:.5pt"> </span>Park<span style="letter-spacing:-1.85pt">
-			  </span></span><span style="font-size:8.0pt;line-height:108%">Sohna<span style="letter-spacing:-.45pt"> </span>Road,<span style="letter-spacing:-.45pt">
-			  </span>Sector-49,</span><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span>
+			  margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">{{ $items->admin_address }} {{ $items->admin_city }} {{ $items->admin_state }}</span>
 		   </p>
 		   <br>
 		   {{-- <p class="TableParagraph" style="margin-left:2.85pt;line-height:9.15pt"><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span></p> --}}
 		   <p class="TableParagraph" style="padding: 3px 0px; margin-top:-13.2pt;margin-right:263.25pt;
-			  margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">FSSAI No--10020064002474<span style="letter-spacing:.05pt"> </span></span><span style="font-size:8.0pt;
+			  margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">FSSAI No--{{ $items->admin_fssai }}<span style="letter-spacing:.05pt"> </span></span><span style="font-size:8.0pt;
 			  line-height:108%"><br>GSTIN/UIN:</span><span style="font-size:8.0pt;line-height:
 			  108%;letter-spacing:2.5pt"> </span><span style="font-size:8.0pt;line-height:
-			  108%">06AADCO1175C1ZV</span></p>
-		   <p class="TableParagraph" style="padding: 3px 0px; margin-top: 0px; margin-left:2.85pt;line-height:9.1pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.4pt"> </span>Name<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:1.4pt"> </span>Haryana,<span style="letter-spacing:-.4pt"> </span>Code<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:-.4pt"> </span>06</span></p>
+			  108%">{{ $items->admin_gst }}</span></p>
+		   <p class="TableParagraph" style="padding: 3px 0px; margin-top: 0px; margin-left:2.85pt;line-height:9.1pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.4pt"> </span>Name<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:1.4pt"> </span>{{ $items->admin_state }},<span style="letter-spacing:-.4pt"> </span>Code<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:-.4pt"> </span>{{ $items->admin_state_code }}</span></p>
 		   <p class="TableParagraph" style="padding: 3px 0px; margin-top: -13px;margin-right:0in;margin-bottom:
 			  0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">E-Mail<span style="letter-spacing:.85pt"> </span>:<span style="letter-spacing:.85pt"> </span></span><a href="mailto:anil.kumar@owo.in"><span style="font-size:8.0pt;color:windowtext;text-decoration:none">anil.kumar@owo.in</span></a></p>
 		</td>
@@ -533,7 +529,7 @@
 			@else
 			@foreach ($product_gst as $p_gst)
             <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
-            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $p_gst->gst }}</span></p>
+            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $p_gst->gst }} %</span></p>
             @endforeach
 			@endif
 			@if($cess == 1)
@@ -1510,7 +1506,7 @@
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:16.5pt;margin-bottom:.0001pt;text-indent:-13.7pt"><span style="font-size:8.0pt">4.<span style="font:7.0pt Times New Roman">&nbsp;&nbsp;&nbsp;&nbsp;
 			 </span></span><span style="font-size:8.0pt">Subject<span style="letter-spacing:
-				.7pt"> </span>to<span style="letter-spacing:.7pt"> </span>Haryana<span style="letter-spacing:.7pt"> </span>Jurisdiction<span style="letter-spacing:
+				.7pt"> </span>to<span style="letter-spacing:.7pt"> </span>{{ $items->admin_state }}<span style="letter-spacing:.7pt"> </span>Jurisdiction<span style="letter-spacing:
 				.7pt"> </span>Only.</span>
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
@@ -1539,6 +1535,6 @@
 	</tr>
   
  </tbody></table>
- <div style="text-align: center; font-family:Arial, Helvetica, sans-serif; margin-bottom: 4px;font-size: 12px;">SUBJECT TO GURGAON, HARYANA JURISDICTION</div>
+ <div style="text-align: center; font-family:Arial, Helvetica, sans-serif; margin-bottom: 4px;font-size: 12px;">SUBJECT TO {{ Str::upper($items->admin_city) }}, {{ Str::upper($items->admin_state) }} JURISDICTION</div>
  <div style="text-align: center; font-family:Arial, Helvetica, sans-serif; margin-bottom: 4px;font-size: 11px;">This is a Computer Generated Invoice</div>
 </body></html>
