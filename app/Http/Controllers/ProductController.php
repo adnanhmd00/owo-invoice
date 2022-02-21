@@ -15,6 +15,7 @@ use PDF;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductsImport;
 use App\Exports\ProductsExport;
+use App\Models\InvoiceId;
 
 class ProductController extends Controller
 {
@@ -36,6 +37,19 @@ class ProductController extends Controller
     public function create(){
         $gstTable = Tin::all();
         return view('add-product-hsn', compact('gstTable'));
+    }
+
+    public function changeInvoiceId(){   
+        $invoice_id = InvoiceId::first();
+        return view('change-invoice-id', compact('invoice_id'));
+    }
+
+    public function changeInvoiceIdPost(Request $request){
+        $invoice_id = InvoiceId::first();
+        $invoice_id->invoice_id = $request->invoice_id;
+        if($invoice_id->save()){
+            return back()->with('success', 'Your Invoice Id Has Been Updated');
+        }
     }
 
     public function store(Request $request){

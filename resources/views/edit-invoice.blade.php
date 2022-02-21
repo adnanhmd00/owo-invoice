@@ -33,7 +33,7 @@
                         @foreach ($products as $product)
                             <tr>
                                 <td><input type="text" name="product_name[]" value="{{ $product->product_name }}" readonly class="form-control"></td>
-                                <td><input type="text" name="attribute[]" value="{{ $product->attribute }}" readonly class="form-control"></td>
+                                <td><input type="text" name="attribute[]" value="{{ $product->attribute }}" class="form-control"></td>
                                 <td><input type="text" name="price[]" value="{{ $product->price }}" class="form-control"></td>
                                 {{-- <td><input type="text" name="item_cost[]" value="{{ $product->item_cost }}" readonly class="form-control"></td> --}}
                                 <td><input type="text" name="quantity[]" value="{{ $product->quantity }}" class="form-control"></td>

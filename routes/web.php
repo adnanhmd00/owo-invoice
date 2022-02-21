@@ -25,6 +25,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('add-product', [ProductController::class, 'create'])->name('add-product');
     Route::post('add-product', [ProductController::class, 'store'])->name('add-product');
     Route::post('update-product/{id}', [ProductController::class, 'update'])->name('update-product');
+    Route::get('change-invoice-id', [ProductController::class, 'changeInvoiceId'])->name('change-invoice-id');
+    Route::post('change-invoice-id', [ProductController::class, 'changeInvoiceIdPost'])->name('change-invoice-id-post');
 
     Route::get('bulk-upload', [ProductController::class, 'fileImportExport'])->name('bulk-upload');
     Route::post('bulk-excel-import', [ProductController::class, 'bulkExcelImport'])->name('bulk-excel-import');

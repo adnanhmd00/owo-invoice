@@ -286,7 +286,7 @@
 		  <p class="TableParagraph" style="margin-top:1.2pt;margin-right:2.05pt;
 			 margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:11.0pt"><span style="font-size:8.0pt">Sl<span style="letter-spacing:-1.75pt"> </span></span><span style="font-size:8.0pt">No.</span></p>
 	   </td>
-	   <td width="264" rowspan="2" valign="top" style="width:197.9pt;border-top:none;
+	   <td width="264" rowspan="2" valign="top" style="width:335.9pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:13.35pt">
 		  <p class="TableParagraph" style="margin-top:3.0pt;margin-right:0in;margin-bottom:
@@ -522,19 +522,19 @@
 		  @if ($items->state_code_billing == 'HR')
 		  @foreach ($product_gst as $p_gst)
           <p class="TableParagraph" style="margin-top:-.05pt;margin-right:0in;margin-bottom:
-             0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; padding: .4pt;">{{ $p_gst->gst/2 }} %</span></p>
+             0in;margin-left:6.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; padding: .4pt;">{{ $p_gst->gst/2 }} %</span></p>
             <p class="TableParagraph" style="margin-top:1.8pt;margin-right:0in;margin-bottom:
-            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $p_gst->gst/2 }} %</span></p>
+            0in;margin-left:6.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $p_gst->gst/2 }} %</span></p>
           @endforeach
 			@else
 			@foreach ($product_gst as $p_gst)
             <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
-            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $p_gst->gst }} %</span></p>
+            0in;margin-left:6.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $p_gst->gst }} %</span></p>
             @endforeach
 			@endif
 			@if($cess == 1)
 			<p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
-            0in;margin-left:22.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">12 %</span></p>
+            0in;margin-left:6.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">12 %</span></p>
 			@endif
 	   </td>
 	   <td width="32" valign="top" style="width:24.0pt;border-top:none;border-left:none;
@@ -748,7 +748,7 @@
 		<td colspan="1" valign="top" style="width:59.0pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
-		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ $total_qty }} Nos</span></p> {{-- Quantity --}}
+		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ $total_qty }}</span></p> {{-- Quantity --}}
 		</td>
 		<td colspan="3" valign="top" style="width:57.35pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -860,7 +860,7 @@
 		<td colspan="1" valign="top" style="width:59.0pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		   padding:0in 0in 0in 0in;height:12.75pt">
-		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ $total_qty }} Nos</span></p>
+		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:8.0pt">{{ $total_qty }}</span></p>
 		</td>
 		<td colspan="1" valign="top" style="width:57.35pt;border-top:none;
 		   border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
