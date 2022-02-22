@@ -23,7 +23,7 @@
                     @endphp
                     @foreach ($products as $product)
                         <tr>
-                            <td>{{ $i++ }}</td>
+                            <td>{{ $product->id }}</td>
                             <td>
                                 <div class="small">{{ $product->product_name }}</div>
                             </td>

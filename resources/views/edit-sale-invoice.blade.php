@@ -31,14 +31,16 @@
                     </thead>
                     <tbody>
                         @foreach ($products as $product)
-                            <tr>
-                                <td><input type="text" name="product_name[]" value="{{ $product->product_name }}" readonly class="form-control"></td>
-                                <td><input type="text" name="attribute[]" value="{{ $product->attribute }}" class="form-control"></td>
-                                <td><input type="text" name="price[]" value="{{ $product->price }}" class="form-control"></td>
-                                {{-- <td><input type="text" name="item_cost[]" value="{{ $product->item_cost }}" readonly class="form-control"></td> --}}
-                                <td><input type="text" name="quantity[]" value="{{ $product->quantity }}" class="form-control"></td>
-                                <td><button type="button" class="delete btn btn-primary" onclick="del()"> <i class="fa fa-trash"></i> </button></td>
-                            </tr>
+                        <?php $prod = App\Models\Product::where('product_name', $product->product_name)->first(); ?>
+                        <tr>
+                            <input type="hidden" name="product_id[]" value="{{ $prod->id }}">
+                            <td><input type="text" name="product_name[]" value="{{ $product->product_name }}" readonly required class="form-control" autocomplete='off'></td>
+                            <td><input type="text" name="attribute[]" value="{{ $product->attribute }}" class="form-control" autocomplete='off' required></td>
+                            <td><input type="text" name="price[]" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" value="{{ $product->price }}" class="form-control" autocomplete='off' required></td>
+                            {{-- <td><input type="text" name="item_cost[]" value="{{ $product->item_cost }}" readonly class="form-control"></td> --}}
+                            <td><input type="text" name="quantity[]" value="{{ $product->quantity }}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" class="form-control" autocomplete='off' required></td>
+                            <td><button type="button" class="delete btn btn-primary" onclick="del()"> <i class="fa fa-trash"></i> </button></td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -106,10 +108,10 @@
         }
     </script>
 
-    <script>
-        $("#somebutton").click(function () {
-            $("#container1").append("<tr><td class='p-3'><input type='text' name='product_name[]' class='form-control' placeholder='Product Name' required></td><td class='p-3'><input type='text' name='attribute[]' class='form-control' placeholder='Attribute Name' required></td><td class='p-3'><input type='text' name='price[]' placeholder='Price' oninput='this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');' class='form-control' required></td><td class='p-3'><input type='text' name='quantity[]' placeholder='Quantity' oninput='this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');' class='form-control' required></td> <td class='p-3'><button type='button' class='delete btn btn-primary' onclick='del()'> <i class='fa fa-trash'></i> </button></td></tr>"
-            );
-        });
-    </script>
+<script>
+    $("#somebutton").click(function () {
+        $("#container1").append("<tr><td class='p-3'><input type='text' onkeypress='return /[0-9]/i.test(event.key)' onkeypress='return /[0-9]/i.test(event.key)' name='product_id[]' class='form-control' placeholder='Product ID' required autocomplete='off'></td><td class='p-3'><input type='text' name='attribute[]' class='form-control' placeholder='Attribute Name' required autocomplete='off'></td><td class='p-3'><input type='text' name='price[]' placeholder='Price' onkeypress='return /[0-9]/i.test(event.key)' class='form-control' required autocomplete='off'></td><td class='p-3'><input type='text' name='quantity[]' placeholder='Quantity' class='form-control' onkeypress='return /[0-9]/i.test(event.key)' required autocomplete='off'></td> <td class='p-3'><button type='button' class='delete btn btn-primary' onclick='del()'> <i class='fa fa-trash'></i> </button></td></tr>"
+        );
+    });
+</script>
 @endsection

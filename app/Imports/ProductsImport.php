@@ -48,8 +48,7 @@ class ProductsImport implements ToModel, WithHeadingRow
             $sale_bill->state_code_shipping = rtrim($row['state_code_shipping']);
             $product_excel->mobile_no = rtrim($row['mobile_no']);
             $sale_bill->mobile_no = rtrim($row['mobile_no']);
-            $product_excel->product_name = rtrim($row['product_name']);
-            $sale_bill->product_name = rtrim($row['product_name']);
+           
             // $product_excel->size = rtrim($row['size']);
             $product_excel->attribute = rtrim(Str::lower($row['attribute']));
             $sale_bill->attribute = rtrim(Str::lower($row['attribute']));
@@ -61,7 +60,9 @@ class ProductsImport implements ToModel, WithHeadingRow
             $sale_bill->quantity = rtrim($row['quantity']);
             $products = Product::all();
             foreach($products as $prod){
-                if(rtrim($row['product_name']) == rtrim($prod->product_name)){
+                if(rtrim($row['product_id']) == rtrim($prod->id)){
+                    $product_excel->product_name = rtrim($prod->product_name);
+                    $sale_bill->product_name = rtrim($prod->product_name);
                     $product_excel->hsn = rtrim($prod->hsn);
                     $sale_bill->hsn = rtrim($prod->hsn);
                     $product_excel->gst = rtrim($prod->gst);

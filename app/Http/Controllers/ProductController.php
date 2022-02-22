@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\ProductExcel;
 use App\Models\SaleBill;
 use App\Models\Product;
@@ -124,6 +125,8 @@ class ProductController extends Controller
     }
 
     public function submitEditInvoice(Request $request, $invoice_no){
+
+
         $detail = ProductExcel::where('invoice', $invoice_no)->first();
         session()->put('detail', $detail);
         $inputs = $request->all();
@@ -131,14 +134,11 @@ class ProductController extends Controller
         unset($inputs['_token']);
         ProductExcel::where('invoice', $detail['invoice'])->delete();
         SaleBill::where('invoice', $detail['invoice'])->delete();
-        for($i=0; $i < sizeof($inputs['product_name']); $i++){
-            // $product_name = $inputs['product_name'][$i];
-            // $attribute = $inputs['attribute'][$i];
-            // $price = $inputs['price'][$i];
-            // $quantity = $inputs['quantity'][$i];
-            // array_push($final_array, [$product_name, $attribute, $price, $quantity]);
+
+        for($i=0; $i < sizeof($inputs['product_id']); $i++){
             $product = new ProductExcel;
             $sale_bill = new SaleBill;
+
             $product->date = session()->get('detail')['date'];
             $sale_bill->date = session()->get('detail')['date'];
             
@@ -178,8 +178,8 @@ class ProductController extends Controller
             $product->mobile_no = session()->get('detail')['mobile_no'];
             $sale_bill->mobile_no = session()->get('detail')['mobile_no'];
 
-            $product->product_name = $inputs['product_name'][$i];
-            $sale_bill->product_name = $inputs['product_name'][$i];
+            // $product->product_name = $inputs['product_name'][$i];
+            // $sale_bill->product_name = $inputs['product_name'][$i];
 
             $product->attribute = $inputs['attribute'][$i];
             $sale_bill->attribute = $inputs['attribute'][$i];
@@ -191,10 +191,23 @@ class ProductController extends Controller
             $sale_bill->quantity = $inputs['quantity'][$i];
 
 
+            $sale_bill->admin_fssai = Auth::user()->fssai;
+            $sale_bill->admin_gst = Auth::user()->gst;
+            $sale_bill->admin_address = Auth::user()->address;
+            $sale_bill->admin_city = Auth::user()->city;
+            $sale_bill->admin_state_code = Auth::user()->state_code;
+            $sale_bill->admin_state = Auth::user()->state;
+
+
+
+
             // ------------------------------------------------------------------------------------------
             $products = Product::all();
             foreach($products as $prod){
-                if(rtrim($inputs['product_name'][$i]) == rtrim($prod->product_name)){
+                if(rtrim($inputs['product_id'][$i]) == rtrim($prod->id)){
+                    $single_prod = Product::where('id', $prod->id)->first();
+                    $product->product_name = $single_prod->product_name;
+                    $sale_bill->product_name = $single_prod->product_name;
                     $product->hsn = rtrim($prod->hsn);
                     $sale_bill->hsn = rtrim($prod->hsn);
 
@@ -236,12 +249,8 @@ class ProductController extends Controller
         $final_array = [];
         unset($inputs['_token']);
         SaleBill::where('invoice', $detail['invoice'])->delete();
-        for($i=0; $i < sizeof($inputs['product_name']); $i++){
-            // $product_name = $inputs['product_name'][$i];
-            // $attribute = $inputs['attribute'][$i];
-            // $price = $inputs['price'][$i];
-            // $quantity = $inputs['quantity'][$i];
-            // array_push($final_array, [$product_name, $attribute, $price, $quantity]);
+
+        for($i=0; $i < sizeof($inputs['product_id']); $i++){
             $product = new SaleBill;
             $product->date = session()->get('detail')['date'];
             $product->invoice = session()->get('detail')['invoice'];
@@ -256,7 +265,7 @@ class ProductController extends Controller
             $product->state_shipping = session()->get('detail')['state_shipping'];
             $product->state_code_shipping = session()->get('detail')['state_code_shipping'];
             $product->mobile_no = session()->get('detail')['mobile_no'];
-            $product->product_name = $inputs['product_name'][$i];
+            // $product->product_name = $inputs['product_name'][$i];
             $product->attribute = $inputs['attribute'][$i];
             $product->price = $inputs['price'][$i];
             $product->quantity = $inputs['quantity'][$i];
@@ -264,7 +273,9 @@ class ProductController extends Controller
             // ------------------------------------------------------------------------------------------
             $products = Product::all();
             foreach($products as $prod){
-                if(rtrim($inputs['product_name'][$i]) == rtrim($prod->product_name)){
+                if(rtrim($inputs['product_id'][$i]) == rtrim($prod->id)){
+                    $single_prod = Product::where('id', $prod->id)->first();
+                    $product->product_name = $single_prod->product_name;
                     $product->hsn = rtrim($prod->hsn);
                     $product->gst = rtrim($prod->gst);
                     $single_price = $inputs['price'][$i] * (100/(100 + $prod->gst));
@@ -274,6 +285,16 @@ class ProductController extends Controller
             $product->gst_value = (round($single_price, 2) * $inputs['quantity'][$i]) * rtrim($prod->gst)/100;
             $product->taxable_amount = (round($single_price, 2) * $inputs['quantity'][$i]);
             // ------------------------------------------------------------------------------------------
+
+
+
+            $product->admin_fssai = Auth::user()->fssai;
+            $product->admin_gst = Auth::user()->gst;
+            $product->admin_address = Auth::user()->address;
+            $product->admin_city = Auth::user()->city;
+            $product->admin_state_code = Auth::user()->state_code;
+            $product->admin_state = Auth::user()->state;
+
             $product->save();
         }
         // \Log::info($final_array);die;
