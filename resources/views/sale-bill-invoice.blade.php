@@ -47,6 +47,7 @@
     }
     $total_tax = array_sum($total_tax);
     $amount = $total_amount - $total_tax;
+	// dd($amount);
     $total_qty = array_sum($total_qty);
 ?>
 {{-- For Calculating total cess item start --}}
@@ -618,17 +619,21 @@
 			 if($cess == 1){
 				 if($total_amount - intval($total_amount) >= 0.5){
 					 // dd($total_amount + $cess_sum[0]);
+					 $short_amount = round(ceil($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2);
 					 echo number_format(round(ceil($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2),2);
 				 }else{
 					 // $total_amount = intval($total_amount);
-					 echo number_format(round(floor($total_amount) - $total_amount, 2),2);
+					 $short_amount = round(floor($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2);
+					 echo number_format(round(floor($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2),2);
 				 }	
 			 }else{
 				 if($total_amount - intval($total_amount) >= 0.5){
 					 // dd($total_amount + $cess_sum[0]);
+					 $short_amount = round(ceil($total_amount) - ($total_amount), 2);
 					 echo number_format(round(ceil($total_amount) - ($total_amount), 2),2);
 				 }else{
 					 // $total_amount = intval($total_amount);
+					 $short_amount = round(floor($total_amount) - $total_amount, 2);
 					 echo number_format(round(floor($total_amount) - $total_amount, 2),2);
 				 }	
 			 }
@@ -782,14 +787,14 @@
 			   $total_amount = intval($total_amount) + 1;
 			   if($cess == 1){
 						// echo '₹'.number_format(round($total_amount, 2) + round( $total_amount * (12/100),2), 2);
-						echo '₹'.number_format(round($total_amount + $cess_sums) ,2); // Symbol
+						echo '₹'.number_format(round($total_amount + $cess_sums, 2)); // Symbol
 			   }else{
 				   echo '₹'.number_format(round($total_amount, 2), 2);
 			   }
 		   }else{
 			   $total_amount = intval($total_amount);
 			   if($cess == 1){
-				   echo '₹'.number_format(round($total_amount + $val_cess * 12/100,2) ,2); // Symbol
+				   echo '₹'.number_format(round($total_amount + $val_cess * 12/100) ,2); // Symbol
 				   // echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount  12/100 ,2) ,2);
 			   }else{
 				   echo '₹'.number_format(round($total_amount, 2), 2);

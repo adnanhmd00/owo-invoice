@@ -31,7 +31,7 @@
 <?php 
     $total_amount = [];
     foreach($products as $product){
-        $x = round(($product->quantity * $product->item_cost) + (($product->item_cost * $product->quantity) * $product->gst)/100, 2);
+        $x = ($product->quantity * $product->item_cost) + (($product->item_cost * $product->quantity) * $product->gst)/100;
         array_push($total_amount, $x);
     }
     $total_amount = array_sum($total_amount);
@@ -48,6 +48,7 @@
     $total_tax = array_sum($total_tax);
 	// dd($total_tax);
     $amount = $total_amount - $total_tax;
+	// dd($amount);
     $total_qty = array_sum($total_qty);
 ?>
 {{-- For Calculating total cess item start --}}
@@ -605,26 +606,30 @@
 			 0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
 			 8.0pt;font-family:Arial,sans-serif">
 			 {{-- Short & Excess Start --}}
-			<?php 
-			if($cess == 1){
-				if($total_amount - intval($total_amount) >= 0.5){
-					// dd($total_amount + $cess_sum[0]);
-					echo number_format(round(ceil($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2),2);
-				}else{
-					// $total_amount = intval($total_amount);
-					echo number_format(round(floor($total_amount) - $total_amount, 2),2);
-				}	
-			}else{
-				if($total_amount - intval($total_amount) >= 0.5){
-					// dd($total_amount + $cess_sum[0]);
-					echo number_format(round(ceil($total_amount) - ($total_amount), 2),2);
-				}else{
-					// $total_amount = intval($total_amount);
-					echo number_format(round(floor($total_amount) - $total_amount, 2),2);
-				}	
-			}
-			?> 
-			{{-- Short & Excess End --}}
+			 <?php 
+			 if($cess == 1){
+				 if($total_amount - intval($total_amount) >= 0.5){
+					 // dd($total_amount + $cess_sum[0]);
+					 $short_amount = round(ceil($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2);
+					 echo number_format(round(ceil($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2),2);
+				 }else{
+					 // $total_amount = intval($total_amount);
+					 $short_amount = round(floor($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2);
+					 echo number_format(round(floor($total_amount + $cess_sums) - ($total_amount + $cess_sums), 2),2);
+				 }	
+			 }else{
+				 if($total_amount - intval($total_amount) >= 0.5){
+					 // dd($total_amount + $cess_sum[0]);
+					 $short_amount = round(ceil($total_amount) - ($total_amount), 2);
+					 echo number_format(round(ceil($total_amount) - ($total_amount), 2),2);
+				 }else{
+					 // $total_amount = intval($total_amount);
+					 $short_amount = round(floor($total_amount) - $total_amount, 2);
+					 echo number_format(round(floor($total_amount) - $total_amount, 2),2);
+				 }	
+			 }
+			 ?> 
+			 {{-- Short & Excess End --}}
 			</span></b></p>
 	   </td>
 	   <td width="79" colspan="3" valign="top" style="width:59.0pt;border-top:none;
@@ -782,7 +787,8 @@
 				}else{
 					$total_amount = intval($total_amount);
 					if($cess == 1){
-						echo '₹'.number_format(round($total_amount + $cess_sums) ,2); // Symbol
+						// dd($total_amount + $cess_sums);
+						echo '₹'.number_format(round($total_amount + $cess_sums), 2); // Symbol
 						// echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount  12/100 ,2) ,2);
 					}else{
 						echo '₹'.number_format(round($total_amount, 2), 2);
@@ -1183,7 +1189,7 @@
 		  padding:0in 0in 0in 0in;height:11.75pt">
 		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:35.05pt;margin-bottom:.0001pt"><b><span style="font-size:
-			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round($total_tax, 2), 2) }}</span></b></p>
+			 8.0pt;font-family:Arial,sans-serif">{{ number_format(round($total_tax + $val_cess * 12 / 100, 2), 2) }}</span></b></p>
 	   </td>
 	   
 	   <td style="height:11.75pt;border:none" width="0" height="16"></td>
