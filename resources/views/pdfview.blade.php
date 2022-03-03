@@ -52,7 +52,7 @@
 ?>
 {{-- For Calculating total cess item start --}}
 @foreach($product_gst as $p_gst)
-<?php $val = App\Models\ProductExcel::where('gst', $p_gst->gst)->sum('taxable_amount');?>
+<?php $val = App\Models\ProductExcel::where('gst', $p_gst->gst)->where('mobile_no', $items->mobile_no)->sum('taxable_amount');?>
 	@if($p_gst->gst >= 28)
 	 <?php $cess_sum = []; ?>
 	 <?php array_push($cess_sum, $val * 12/100); ?>

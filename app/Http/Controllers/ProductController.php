@@ -198,9 +198,6 @@ class ProductController extends Controller
             $sale_bill->admin_state_code = Auth::user()->state_code;
             $sale_bill->admin_state = Auth::user()->state;
 
-
-
-
             // ------------------------------------------------------------------------------------------
             $products = Product::all();
             foreach($products as $prod){
