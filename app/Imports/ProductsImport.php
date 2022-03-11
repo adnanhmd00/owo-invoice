@@ -67,7 +67,11 @@ class ProductsImport implements ToModel, WithHeadingRow
                     $sale_bill->hsn = rtrim($prod->hsn);
                     $product_excel->gst = rtrim($prod->gst);
                     $sale_bill->gst = rtrim($prod->gst);
-                    $single_price = $row['price'] * (100/(100 + $prod->gst));
+                    if($prod->gst >= 28){
+                        $single_price = $row['price'] * (100/(100 + $prod->gst + 12));
+                    }else{
+                        $single_price = $row['price'] * (100/(100 + $prod->gst));
+                    }
                 }
             }
             $product_excel->item_cost = round($single_price, 2);

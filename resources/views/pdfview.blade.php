@@ -1203,7 +1203,7 @@
 		  none;padding:0in 0in 0in 0in;height:15.75pt">
 		  <p class="TableParagraph" style="margin-top:3.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Amount<span style="letter-spacing:.55pt"> </span>Chargeable<span style="letter-spacing:
-			 .55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount))) }} Only</span></b>
+			 .55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount + $cess_sums))) }} Only</span></b>
 		  </p>
 	   </td>
  
@@ -1388,7 +1388,7 @@
 		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:9.1pt"><span style="font-size:8.0pt">Tax<span style="letter-spacing:.45pt"> </span>Amount<span style="letter-spacing:.45pt"> </span>(in<span style="letter-spacing:.45pt"> </span>words)<span style="letter-spacing:1.0pt"> </span>:</span><span style="font-size:8.0pt;
 			 letter-spacing:3.5pt"> </span><b><span style="font-size:8.0pt;font-family:
-			 Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_tax))) }} Only</span></b></p>
+			 Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_tax + $cess_sums))) }} Only</span></b></p>
 	   </td>
 	   <td width="132" colspan="7" rowspan="5" valign="top" style="width:98.85pt;border: none;border-bottom:solid black 1.0pt;padding:0in 0in 0in 0in;height:16.45pt">
 		  <p class="TableParagraph"><span style="font-size:10.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
