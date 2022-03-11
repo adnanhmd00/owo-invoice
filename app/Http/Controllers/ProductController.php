@@ -392,7 +392,7 @@ class ProductController extends Controller
         try{
             DB::table('product_excels')->delete();
             Excel::import(new ProductsImport, $request->file('file')->store('temp'));
-            return back()->with('success', 'Excel Uploaded Successfully');
+            return redirect()->route('home')->with('success', 'Excel Uploaded Successfully');
         }   
         catch(Exception $e){
             return back()->with('error', 'Something Went Wrong, Please Check Your Excel Format And Try Again');

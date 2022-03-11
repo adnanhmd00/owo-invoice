@@ -894,24 +894,26 @@
 		   padding:0in 0in 0in 0in;height:12.75pt">
 		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:9.0pt;font-family:Microsoft Sans Serif,sans-serif"><span style="letter-spacing:-.15pt"> </span></span><b><span style="font-size:9.0pt;
 			  font-family:Arial,sans-serif">
-			   <?php
-					if($total_amount - intval($total_amount) >= 0.5){
-						$total_amount = intval($total_amount) + 1;
-						if($cess == 1){
-							echo '₹'.number_format(round($total_amount + $val_cess * 12 / 100, 2), 2);
-						}else{
-							echo '₹'.number_format(round($total_amount, 2), 2);
-						}
-					}
-					else{
-						$total_amount = intval($total_amount);
-						if($cess == 1){
-							echo number_format(round($total_amount + $val_cess * 12 / 100, 2), 2);
-						}else{
-							echo number_format(round($total_amount, 2), 2);
-						}
-					}
-				?>
+			  <?php
+			  if($total_amount - intval($total_amount) >= 0.5){
+				$total_amount = intval($total_amount) + 1;
+				if($cess == 1){
+					// echo '₹'.number_format(round($total_amount, 2) + round( $total_amount * (12/100),2), 2);
+					echo '₹'.number_format(round($total_amount + $cess_sums) ,2); // Symbol
+				}else{
+					echo '₹'.number_format(round($total_amount, 2), 2);
+				}
+			}else{
+				$total_amount = intval($total_amount);
+				if($cess == 1){
+					// dd($total_amount + $cess_sums);
+					echo '₹'.number_format(round($total_amount + $cess_sums), 2); // Symbol
+					// echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount  12/100 ,2) ,2);
+				}else{
+					echo '₹'.number_format(round($total_amount, 2), 2);
+				}
+			}
+		 ?>
 			  {{-- {{ number_format(round($total_amount, 2), 2) }} --}}
 			</span></b></p>
 		</td>
