@@ -463,4 +463,43 @@ class ProductController extends Controller
             return view('search-result', compact('products'));
         }
     }
+
+    public function sendInvoice($mobile_no){
+
+        $bank = Bank::where('status', 1)->first();
+        $items = ProductExcel::where('mobile_no', $mobile_no)->first();   
+        $billing_state = Tin::where('state_code', $items->state_code_billing)->first();
+        $shipping_state = Tin::where('state_code', $items->state_code_shipping)->first();
+
+            $array['view'] = 'email.invoice';
+            $array['subject'] = 'Your Invoice';
+            $array['from'] = env('MAIL_USERNAME');
+            $array['bank'] = $bank;
+            $array['items'] = $items;
+            $array['billing_state'] = $billing_state;
+            $array['shipping_state'] = $shipping_state;
+            // dd($array['items']);
+            \Mail::to($items->email_id)->send(new \App\Mail\SendInvoiceMail($array));
+            return redirect()->route('home')->with('success', 'Invoice Has Been Sent');
+    }
+
+
+    public function sendSaleInvoice($invoice_no){
+
+        $bank = Bank::where('status', 1)->first();
+        $items = SaleBill::where('invoice', $invoice_no)->first();   
+        $billing_state = Tin::where('state_code', $items->state_code_billing)->first();
+        $shipping_state = Tin::where('state_code', $items->state_code_shipping)->first();
+
+            $array['view'] = 'email.invoice';
+            $array['subject'] = 'Your Invoice';
+            $array['from'] = env('MAIL_USERNAME');
+            $array['bank'] = $bank;
+            $array['items'] = $items;
+            $array['billing_state'] = $billing_state;
+            $array['shipping_state'] = $shipping_state;
+            // dd($array['items']);
+            \Mail::to($items->email_id)->send(new \App\Mail\SendInvoiceMail($array));
+            return redirect()->route('sale-bill')->with('success', 'Invoice Has Been Sent');
+    }
 }

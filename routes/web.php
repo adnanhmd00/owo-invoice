@@ -61,6 +61,20 @@ Route::middleware(['auth'])->group(function () {
     Route::post('add-new-admin', [RegisterController::class, 'store'])->name('add-new-admin');
     Route::get('profile', [RegisterController::class, 'profile'])->name('profile');
     Route::post('update/{id}', [RegisterController::class, 'update'])->name('update');
+
+    Route::get('send-mail/{mobile_no}', [ProductController::class, 'sendInvoice'])->name('send-mail');
+    Route::get('send-sale-bill-mail/{invoice_no}', [ProductController::class, 'sendSaleInvoice'])->name('send-sale-bill-mail');
+
+    // Route::get('send-mail', function () {
+    //     $details = [
+    //         'title' => 'Mail from ItSolutionStuff.com',
+    //         'body' => 'This is for testing email using smtp'
+    //     ];
+       
+    //     \Mail::to('addutech00@gmail.com')->send(new \App\Mail\SendInvoiceMail($details));
+       
+    //     dd("Email is Sent.");
+    // });
 });
 
 Route::get('/dashboard', function () {

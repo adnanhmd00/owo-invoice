@@ -1,25 +1,24 @@
 <?php 
-	$inv_id = explode('-', $items->invoice);
+	$inv_id = explode('-', $array['items']['invoice']);
 	$inv_id = $inv_id[0].'/'.$inv_id[1].'-'.$inv_id[2].'/'.$inv_id[3];
 ?>
 <?php
-	$products = App\Models\SaleBill::where('invoice', $items->invoice)->get();
-	$product_gst = App\Models\SaleBill::where('invoice', $items->invoice)->select('gst')->distinct()->get();
+	$products = App\Models\ProductExcel::where('mobile_no', $array['items']['mobile_no'])->get();
+	$product_gst = App\Models\ProductExcel::where('mobile_no', $array['items']['mobile_no'])->select('gst')->distinct()->get();
 ?>
-<?php $val_cess = App\Models\SaleBill::where('gst', 28)->where('invoice', $items->invoice)->sum('taxable_amount'); ?>
+<?php $val_cess = App\Models\ProductExcel::where('gst','>=', 28)->where('mobile_no', $array['items']['mobile_no'])->sum('taxable_amount'); ?>
 <?php
 	$gst_sum = [];
 	foreach($product_gst as $p_gst){
-		$sum = App\Models\SaleBill::where('gst', $p_gst->gst)->where('invoice', $items->invoice)->sum('gst_value');
+		$sum = App\Models\ProductExcel::where('gst', $p_gst->gst)->where('mobile_no', $array['items']['mobile_no'])->sum('gst_value');
 		array_push($gst_sum, $sum);
 	}
 	$taxable_values_sum = [];
 	foreach($product_gst as $p_gst){
-		$amount_sum = App\Models\SaleBill::where('gst', $p_gst->gst)->where('invoice', $items->invoice)->sum('taxable_amount');
+		$amount_sum = App\Models\ProductExcel::where('gst', $p_gst->gst)->where('mobile_no', $array['items']['mobile_no'])->sum('taxable_amount');
 		array_push($taxable_values_sum, $amount_sum);
 	}
 ?>
-
 <?php 
 	$cess = 0;
 	foreach($products as $product){
@@ -32,7 +31,7 @@
 <?php 
     $total_amount = [];
     foreach($products as $product){
-        $x = (($product->quantity * $product->item_cost) + (($product->item_cost * $product->quantity) * $product->gst)/100);
+        $x = ($product->quantity * $product->item_cost) + (($product->item_cost * $product->quantity) * $product->gst)/100;
         array_push($total_amount, $x);
     }
     $total_amount = array_sum($total_amount);
@@ -45,14 +44,16 @@
         array_push($total_tax, $y);
         array_push($total_qty, $qty);
     }
+	
     $total_tax = array_sum($total_tax);
+	// dd($total_tax);
     $amount = $total_amount - $total_tax;
 	// dd($amount);
     $total_qty = array_sum($total_qty);
 ?>
 {{-- For Calculating total cess item start --}}
 @foreach($product_gst as $p_gst)
-<?php $val = App\Models\SaleBill::where('gst', $p_gst->gst)->where('invoice', $items->invoice)->sum('taxable_amount');?>
+<?php $val = App\Models\ProductExcel::where('gst', $p_gst->gst)->where('mobile_no', $array['items']['mobile_no'])->sum('taxable_amount');?>
 	@if($p_gst->gst >= 28)
 	 <?php $cess_sum = []; ?>
 	 <?php array_push($cess_sum, $val * 12/100); ?>
@@ -61,7 +62,6 @@
 @endforeach	
 
 {{-- For Calculating total cess item end --}}
-
 <html><head></head><body>
 	<style>
 		@media print {
@@ -70,57 +70,49 @@
 			}
 		}
 		</style>
-	<div class="text-right">
-		<button class="hidden-print" style="float: right; margin: 10px 20px;" onclick="window.print()">Print</button>
-	</div>
-	<div class="text-right">
-		<a style="float: right; margin: 10px 20px;" href="{{ route('send-sale-bill-mail', $items->invoice) }}" class="hidden-print">Send To Mail</a>
-	</div>
-	<br>
-	<br>
 	<div style="text-align: center; font-family:Arial, Helvetica, sans-serif; margin-bottom: 4px;;">Tax Invoice</div>
 	<table class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0" style="margin:auto">
 	
 	<tbody><tr style="height:21.75pt">
-		<td width="513" @if($cess == 1) colspan="12" @else colspan="7" @endif rowspan="5" valign="top" style="width:384.5pt;border:
-		   solid black 1.0pt;padding:0in 0in 0in 0in;height:21.75pt">
-		   <img src="{{ asset('owo-water.png') }}" style="width: 100px; padding: 5px;@if( $cess == 1) margin-left: 700px; @else margin-left: 400px; @endif margin-bottom: -140px;" alt="oso.jpd"> 
-		   <p class="TableParagraph" style="padding: 3px 0px; margin-top:4.35pt;margin-right:0in;margin-bottom:
-			  0in;margin-left:2.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			  font-family:Arial,sans-serif">OWO<span style="letter-spacing:.7pt"> </span>Technologies<span style="letter-spacing:.7pt"> </span>Pvt.<span style="letter-spacing:.75pt"> </span>Ltd.</span></b>
-			 </p>
-		   <p class="TableParagraph" style="padding: 3px 0px; margin-top:.8pt;margin-right:237.95pt;
-			  margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">{{ $items->admin_address }} {{ $items->admin_city }} {{ $items->admin_state }}</span>
-		   </p>
-		   <br>
-		   {{-- <p class="TableParagraph" style="margin-left:2.85pt;line-height:9.15pt"><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span></p> --}}
-		   <p class="TableParagraph" style="padding: 3px 0px; margin-top:-13.2pt;margin-right:263.25pt;
-			  margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">FSSAI No--{{ $items->admin_fssai }}<span style="letter-spacing:.05pt"> </span></span><span style="font-size:8.0pt;
-			  line-height:108%"><br>GSTIN/UIN:</span><span style="font-size:8.0pt;line-height:
-			  108%;letter-spacing:2.5pt"> </span><span style="font-size:8.0pt;line-height:
-			  108%">{{ $items->admin_gst }}</span></p>
-		   <p class="TableParagraph" style="padding: 3px 0px; margin-top: 0px; margin-left:2.85pt;line-height:9.1pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.4pt"> </span>Name<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:1.4pt"> </span>{{ $items->admin_state }},<span style="letter-spacing:-.4pt"> </span>Code<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:-.4pt"> </span>{{ $items->admin_state_code }}</span></p>
-		   <p class="TableParagraph" style="padding: 3px 0px; margin-top: -13px;margin-right:0in;margin-bottom:
-			  0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">E-Mail<span style="letter-spacing:.85pt"> </span>:<span style="letter-spacing:.85pt"> </span></span><a href="mailto:anil.kumar@owo.in"><span style="font-size:8.0pt;color:windowtext;text-decoration:none">anil.kumar@owo.in</span></a></p>
-		</td>
-		<td width="254" colspan="7" valign="top" style="width:190.5pt;border:solid black 1.0pt;
-		   border-left:none;padding:0in 0in 0in 0in;height:21.75pt">
-		   <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
-			  0in;margin-left:2.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Invoice<span style="letter-spacing:-.45pt"> </span>No.</span></p>
-		   <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			  0in;margin-left:2.35pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			  font-family:Arial,sans-serif">{{ $inv_id }}</span></b></p>
-		</td>
-		<td width="250" colspan="5" valign="top" style="width:187.5pt;border:solid black 1.0pt;
-		   border-left:none;padding:0in 0in 0in 0in;height:21.75pt">
-		   <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
-			  0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Dated</span></p>
-		   <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			  0in;margin-left:1.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			  font-family:Arial,sans-serif">{{ date("d-M-y", strtotime($items->date)) }}</span></b></p>
-		</td>
-		<td style="height:21.75pt;border:none" width="0" height="29"></td>
-	 </tr>
+	   <td width="513" @if($cess == 1) colspan="12" @else colspan="7" @endif rowspan="5" valign="top" style="width:384.5pt;border:
+		  solid black 1.0pt;padding:0in 0in 0in 0in;height:21.75pt">
+          <img src="{{ asset('owo-water.png') }}" style="width: 100px; padding: 5px;@if( $cess == 1) margin-left: 700px; @else margin-left: 400px; @endif margin-bottom: -140px;" alt="oso.jpd"> 
+		  <p class="TableParagraph" style="padding: 3px 0px; margin-top:4.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
+			 font-family:Arial,sans-serif">OWO<span style="letter-spacing:.7pt"> </span>Technologies<span style="letter-spacing:.7pt"> </span>Pvt.<span style="letter-spacing:.75pt"> </span>Ltd.</span></b>
+			</p>
+		  <p class="TableParagraph" style="padding: 3px 0px; margin-top:.8pt;margin-right:237.95pt;
+			 margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">{{ Auth::user()->address }}, {{ Auth::user()->city }}, {{ Auth::user()->state }}</span>
+		  </p>
+          <br>
+		  {{-- <p class="TableParagraph" style="margin-left:2.85pt;line-height:9.15pt"><span style="font-size:8.0pt">Gurugram,<span style="letter-spacing:.9pt"> </span>Haryana</span></p> --}}
+		  <p class="TableParagraph" style="padding: 3px 0px; margin-top:-13.2pt;margin-right:263.25pt;
+			 margin-bottom:0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:108%"><span style="font-size:8.0pt;line-height:108%">FSSAI No--{{ Auth::user()->fssai }}<span style="letter-spacing:.05pt"> </span></span><span style="font-size:8.0pt;
+			 line-height:108%"><br>GSTIN/UIN:</span><span style="font-size:8.0pt;line-height:
+			 108%;letter-spacing:2.5pt"> </span><span style="font-size:8.0pt;line-height:
+			 108%">{{ Auth::user()->gst }}</span></p>
+		  <p class="TableParagraph" style="padding: 3px 0px; margin-top: 0px; margin-left:2.85pt;line-height:9.1pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.4pt"> </span>Name<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:1.4pt"> </span>{{ Auth::user()->state }},<span style="letter-spacing:-.4pt"> </span>Code<span style="letter-spacing:-.4pt"> </span>:<span style="letter-spacing:-.4pt"> </span>{{ Auth::user()->state_code }}</span></p>
+		  <p class="TableParagraph" style="padding: 3px 0px; margin-top: -13px;margin-right:0in;margin-bottom:
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:8.4pt"><span style="font-size:8.0pt">E-Mail<span style="letter-spacing:.85pt"> </span>:<span style="letter-spacing:.85pt"> </span></span><a href="mailto:anil.kumar@owo.in"><span style="font-size:8.0pt;color:windowtext;text-decoration:none">anil.kumar@owo.in</span></a></p>
+	   </td>
+	   <td width="254" colspan="7" valign="top" style="width:190.5pt;border:solid black 1.0pt;
+		  border-left:none;padding:0in 0in 0in 0in;height:21.75pt">
+		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:2.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Invoice<span style="letter-spacing:-.45pt"> </span>No.</span></p>
+		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:2.35pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
+			 font-family:Arial,sans-serif">{{ $inv_id }}</span></b></p>
+	   </td>
+	   <td width="250" colspan="5" valign="top" style="width:187.5pt;border:solid black 1.0pt;
+		  border-left:none;padding:0in 0in 0in 0in;height:21.75pt">
+		  <p class="TableParagraph" style="margin-top:1.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Dated</span></p>
+		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:1.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
+			 font-family:Arial,sans-serif">{{ date("d-M-y", strtotime($array['items']['date'])) }}</span></b></p>
+	   </td>
+	   <td style="height:21.75pt;border:none" width="0" height="29"></td>
+	</tr>
 	<tr style="height:20.75pt">
 	   <td width="254" colspan="7" valign="top" style="width:190.5pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -146,7 +138,7 @@
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.35pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ $inv_id }}</span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif;letter-spacing:3.3pt"> </span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">dt.<span style="letter-spacing:.75pt"> </span>{{ date("d-M-y", strtotime($items->date)) }}</span></b></p>
+			 font-family:Arial,sans-serif">{{ $inv_id }}</span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif;letter-spacing:3.3pt"> </span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">dt.<span style="letter-spacing:.75pt"> </span>{{ date("d-M-y", strtotime($array['items']['date'])) }}</span></b></p>
 	   </td>
 	   <td width="250" colspan="5" valign="top" style="width:187.5pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -196,15 +188,15 @@
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:9.0pt">Consignee<span style="letter-spacing:.7pt"> </span>(Ship<span style="letter-spacing:.75pt"> </span>to)</span></p>
 		  <p class="TableParagraph" style="margin-top:.05in;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ Str::title($items->customer_name_shipping) }}</b>
+			 font-family:Arial,sans-serif">{{ Str::title($array['items']['customer_name_shipping']) }}</b>
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ Str::title($items->customer_address_shipping) }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ Str::title($array['items']['customer_address_shipping']) }}</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">GSTIN/UIN:<span style="letter-spacing:.85pt"> </span>{{ $items->gst_no }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">GSTIN/UIN:<span style="letter-spacing:.85pt"> </span>{{ $array['items']['gst_no'] }}</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:7.4pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.35pt"> </span>Name:<span style="letter-spacing:1.4pt"> </span>{{ $shipping_state->state }},<span style="letter-spacing:
-			 -.3pt"> </span>Code<span style="letter-spacing:-.3pt"> </span>:<span style="letter-spacing:-.3pt"> </span>{{ $shipping_state->state_tin }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:7.4pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.35pt"> </span>Name:<span style="letter-spacing:1.4pt"> </span>{{ $array['shipping_state']['state'] }},<span style="letter-spacing:
+			 -.3pt"> </span>Code<span style="letter-spacing:-.3pt"> </span>:<span style="letter-spacing:-.3pt"> </span>{{ $array['shipping_state']['state_tin'] }}</span></p>
 	   </td>
 	   <td style="height:11.75pt;border:none" width="0" height="16"></td>
 	</tr>
@@ -247,19 +239,19 @@
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.05in;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ Str::title($items->customer_name_billing) }}</span></b>
+			 font-family:Arial,sans-serif">{{ Str::title($array['items']['customer_name_billing']) }}</span></b>
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ Str::title($items->customer_address_billing) }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ Str::title($array['items']['customer_address_billing']) }}</span></p>
 			 <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Mob:{{ Str::title($items->mobile_no) }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Mob:{{ Str::title($array['items']['mobile_no']) }}</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">GSTIN/UIN :<span style="letter-spacing:.85pt"> </span>{{ $items->gst_no }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">GSTIN/UIN :<span style="letter-spacing:.85pt"> </span>{{ $array['items']['gst_no'] }}</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.35pt"> </span>Name:<span style="letter-spacing:1.4pt"> </span>{{ $billing_state->state }},<span style="letter-spacing:
-			 -.3pt"> </span>Code<span style="letter-spacing:-.3pt"> </span>:<span style="letter-spacing:-.3pt"> </span>{{ $billing_state->state_tin }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">State<span style="letter-spacing:-.35pt"> </span>Name:<span style="letter-spacing:1.4pt"> </span>{{ $array['billing_state']['state'] }},<span style="letter-spacing:
+			 -.3pt"> </span>Code<span style="letter-spacing:-.3pt"> </span>:<span style="letter-spacing:-.3pt"> </span>{{ $array['billing_state']['state_tin'] }}</span></p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
-			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Place<span style="letter-spacing:-.35pt"> </span>of<span style="letter-spacing:-.35pt"> </span>Supply</span><span style="font-size:8.0pt">:<span style="letter-spacing:.35pt"> </span>{{ $billing_state->state }}</span></p>
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Place<span style="letter-spacing:-.35pt"> </span>of<span style="letter-spacing:-.35pt"> </span>Supply</span><span style="font-size:8.0pt">:<span style="letter-spacing:.35pt"> </span>{{ $array['billing_state']['state'] }}</span></p>
 	   </td>
 	   {{-- <td width="254" colspan="7" valign="top" style="width:190.5pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -280,7 +272,7 @@
 		  <p class="TableParagraph" style="margin-left:2.35pt; margin-top: -50px;"><span style="font-size:
 			 8.0pt">Terms<span style="letter-spacing:-.45pt"> </span>of<span style="letter-spacing:-.45pt"> </span>Delivery</span></p>
 			  <p class="TableParagraph" style="margin-left:2.35pt; margin-top: 10px;"><span style="font-size:
-				8.0pt"><strong>{{ $items->month }} Month Billing</strong></span></p>	
+				8.0pt"><strong>{{ $array['items']['month'] }} Month Billing</strong></span></p>	
 	   </td>
 	   <td style="height:.75in;border:none" width="0" height="72"></td>
 	</tr>
@@ -344,7 +336,7 @@
 			 right"><span style="font-size:8.0pt">Taxable Value</span></p>
 	  
 	   </td>
-	   @if($items->state_code_billing == 'HR')
+	   @if($array['items']['state_code_billing'] == 'HR')
 	   <td width="100" colspan="3" valign="top" style="width:75.0pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:13.35pt">
@@ -383,7 +375,7 @@
 	 
 	</tr>
 	<tr style="height:10.75pt">
-	  @if($items->state_code_billing == 'HR')
+	  @if($array['items']['state_code_billing'] == 'HR')
 	  <td width="40" colspan="2" valign="top" style="width:30.0pt;border-top:none;
 	  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 	  padding:0in 0in 0in 0in;height:10.75pt">
@@ -457,7 +449,7 @@
         font-family:Arial,sans-serif">{{ Str::title(substr($product->product_name, 0,260)) }}@if(strlen($product->product_name) > 260)...@endif</span></p>        
         @endforeach
 		  <p class="TableParagraph" style="margin-top:.2pt"><span style="font-size:11.5pt;font-family:Times New Roman,serif">&nbsp;</span></p>
-		 @if ($items->state_code_billing == 'HR')
+		 @if ($array['items']['state_code_billing'] == 'HR')
 		 @foreach ($product_gst as $p_gst)
          <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
 		 0in;@if($cess == 1) margin-left:5.85pt; @else margin-left:100.85pt; @endif margin-bottom:.0001pt;line-height:120%"><b><i>
@@ -523,7 +515,7 @@
 		  <p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
 		  <p class="TableParagraph" style="margin-top:-36.2pt"><span style="font-size:11.5pt;
 			 font-family:Times New Roman,serif">&nbsp;</span></p>
-		  @if ($items->state_code_billing == 'HR')
+		  @if ($array['items']['state_code_billing'] == 'HR')
 		  @foreach ($product_gst as $p_gst)
           <p class="TableParagraph" style="margin-top:-.05pt;margin-right:0in;margin-bottom:
              0in;margin-left:6.35pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; padding: .4pt;">{{ $p_gst->gst/2 }} %</span></p>
@@ -550,19 +542,10 @@
          0in;margin-left:7.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">{{ $product->pack_name }}</span></p>
          @endforeach
 		  <p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
-		 @if($cess == 1)
-		 <p class="TableParagraph" style="margin-top:-38.2pt"><span style="font-size:11.5pt;
-			font-family:Times New Roman,serif">&nbsp;</span></p>
-		@else
-		<p class="TableParagraph" style="margin-top:-78.2pt"><span style="font-size:11.5pt;
-			font-family:Times New Roman,serif">&nbsp;</span></p>
-		@endif
-
-		<p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
-		<p class="TableParagraph" style="margin-top:-36.2pt"><span style="font-size:11.5pt;
-   font-family:Times New Roman,serif">&nbsp;</span></p>
+		  <p class="TableParagraph" style="margin-top:-43.2pt"><span style="font-size:11.5pt;
+			 font-family:Times New Roman,serif">&nbsp;</span></p>
 		 <p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
-		  
+		
 		 @if($items->state_code_billing == 'HR')
 		 @foreach ($product_gst as $p_gst)
         <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
@@ -593,7 +576,7 @@
 		  <p class="TableParagraph"><span style="font-size:9.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
 		  <p class="TableParagraph" style="margin-top:-35.2pt"><span style="font-size:11.5pt;
 			 font-family:Times New Roman,serif">&nbsp;</span></p>
-		  @if($items->state_code_billing == 'HR')
+		  @if($array['items']['state_code_billing'] == 'HR')
 		  @foreach ($gst_sum as $gst)
             <p class="TableParagraph" style="margin-top:.05pt;margin-right:0in;margin-bottom:
             0in;margin-left:14.85pt;margin-bottom:.0001pt"><b><span style="font-size:
@@ -652,7 +635,7 @@
           0in;margin-left:24.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt; margin-left: -11px;">{{ number_format(round(($product->item_cost * $product->quantity), 2), 2) }}</span></p>
           @endforeach
 	   </td>
-	  	@if($items->state_code_billing == 'HR')
+	  	@if($array['items']['state_code_billing'] == 'HR')
 			<td width="32" colspan="2" valign="top" style="width:24.0pt;border-top:none;
 			border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 			padding:0in 0in 0in 0in;height:214.75pt">
@@ -720,7 +703,9 @@
         <p class="TableParagraph" style="margin-top:6.35pt;padding: .4pt;margin-right:0in;margin-bottom:
         0in;margin-left:10.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">
 		@if($product->gst >= 28)
+		<?php $cess_sum = [];  ?>
 		 {{ number_format(round((($product->item_cost * $product->quantity) * 12/100) , 2), 2) }} 
+		 <?php array_push($cess_sum, ($product->item_cost * $product->quantity) * 12/100); ?>
 		@else
 		&nbsp;
 		@endif
@@ -749,7 +734,7 @@
 	 
 	</tr>
 	{{-- Total Part --}}
-	@if($items->state_code_billing == 'HR')
+	@if($array['items']['state_code_billing'] == 'HR')
 	<tr style="height:12.75pt">
     
 		<td colspan="2" valign="top" style="width:3.0in;border-top:none;
@@ -786,24 +771,25 @@
 		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:9.0pt;font-family:Microsoft Sans Serif,sans-serif"><span style="letter-spacing:-.15pt"> </span></span><b><span style="font-size:9.0pt;
 			  font-family:Arial,sans-serif">
 			 <?php
-			 if($total_amount - intval($total_amount) >= 0.5){
-			   $total_amount = intval($total_amount) + 1;
-			   if($cess == 1){
+			  	if($total_amount - intval($total_amount) >= 0.5){
+					$total_amount = intval($total_amount) + 1;
+					if($cess == 1){
 						// echo '₹'.number_format(round($total_amount, 2) + round( $total_amount * (12/100),2), 2);
-						echo '₹'.number_format(round($total_amount + $cess_sums, 2)); // Symbol
-			   }else{
-				   echo '₹'.number_format(round($total_amount, 2), 2);
-			   }
-		   }else{
-			   $total_amount = intval($total_amount);
-			   if($cess == 1){
-				   echo '₹'.number_format(round($total_amount + $val_cess * 12/100) ,2); // Symbol
-				   // echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount  12/100 ,2) ,2);
-			   }else{
-				   echo '₹'.number_format(round($total_amount, 2), 2);
-			   }
-		   }
-		?>
+						echo '₹'.number_format(round($total_amount + $cess_sums) ,2); // Symbol
+					}else{
+						echo '₹'.number_format(round($total_amount, 2), 2);
+					}
+				}else{
+					$total_amount = intval($total_amount);
+					if($cess == 1){
+						// dd($total_amount + $cess_sums);
+						echo '₹'.number_format(round($total_amount + $cess_sums), 2); // Symbol
+						// echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount  12/100 ,2) ,2);
+					}else{
+						echo '₹'.number_format(round($total_amount, 2), 2);
+					}
+				}
+			 ?>
 			  {{-- {{ number_format(round($total_amount, 2), 2) }} --}}
 			</span></b></p> {{-- Total --}}
 		</td>
@@ -897,26 +883,26 @@
 		   padding:0in 0in 0in 0in;height:12.75pt">
 		   <p class="TableParagraph" style="text-align: center;"><span style="font-size:9.0pt;font-family:Microsoft Sans Serif,sans-serif"><span style="letter-spacing:-.15pt"> </span></span><b><span style="font-size:9.0pt;
 			  font-family:Arial,sans-serif">
-			  <?php
-			  if($total_amount - intval($total_amount) >= 0.5){
-				$total_amount = intval($total_amount) + 1;
-				if($cess == 1){
-					// echo '₹'.number_format(round($total_amount, 2) + round( $total_amount * (12/100),2), 2);
-					echo '₹'.number_format(round($total_amount + $cess_sums) ,2); // Symbol
-				}else{
-					echo '₹'.number_format(round($total_amount, 2), 2);
-				}
-			}else{
-				$total_amount = intval($total_amount);
-				if($cess == 1){
-					// dd($total_amount + $cess_sums);
-					echo '₹'.number_format(round($total_amount + $cess_sums), 2); // Symbol
-					// echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount  12/100 ,2) ,2);
-				}else{
-					echo '₹'.number_format(round($total_amount, 2), 2);
-				}
-			}
-		 ?>
+			   <?php
+					if($total_amount - intval($total_amount) >= 0.5){
+						$total_amount = intval($total_amount) + 1;
+						if($cess == 1){
+							// echo '₹'.number_format(round($total_amount, 2) + round( $total_amount * (12/100),2), 2);
+							echo '₹'.number_format(round($total_amount + $cess_sums) ,2); // Symbol
+						}else{
+							echo '₹'.number_format(round($total_amount, 2), 2);
+						}
+					}else{
+						$total_amount = intval($total_amount);
+						if($cess == 1){
+							// dd($total_amount + $cess_sums);
+							echo '₹'.number_format(round($total_amount + $cess_sums), 2); // Symbol
+							// echo '₹'.number_format(round($total_amount, 2), 2) + number_format(round( $total_amount  12/100 ,2) ,2);
+						}else{
+							echo '₹'.number_format(round($total_amount, 2), 2);
+						}
+					}
+				?>	
 			  {{-- {{ number_format(round($total_amount, 2), 2) }} --}}
 			</span></b></p>
 		</td>
@@ -965,22 +951,15 @@
 	{{-- End Total Part --}}
 
 	{{-- Here --}}
-	@if($items->state_code_billing == 'HR')
+	@if($array['items']['state_code_billing'] == 'HR')
 	<tr style="height:15.75pt">
 	   <td colspan="18" valign="top" style="width:383.35pt;border-top:none;
 		  border-left:solid black 1.0pt;border-bottom:solid black 1.0pt;border-right:
 		  none;padding:0in 0in 0in 0in;height:15.75pt">
-		 @if($cess == 1)
-		 <p class="TableParagraph" style="margin-top:3.35pt;margin-right:0in;margin-bottom:
-			0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Amount<span style="letter-spacing:.55pt"> </span>Chargeable<span style="letter-spacing:
-			.55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount + $cess_sums))) }} Only</span></b>
-		</p>
-		@else
-	  <p class="TableParagraph" style="margin-top:3.35pt;margin-right:0in;margin-bottom:
-			0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Amount<span style="letter-spacing:.55pt"> </span>Chargeable<span style="letter-spacing:
-			.55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_amount))) }} Only</span></b>
-		</p>
-		@endif
+		  <p class="TableParagraph" style="margin-top:3.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Amount<span style="letter-spacing:.55pt"> </span>Chargeable<span style="letter-spacing:
+			 .55pt"> </span>(in<span style="letter-spacing:.55pt"> </span>words)</span><span style="font-size:8.0pt;letter-spacing:5.6pt"> </span><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">Indian Rupees @if($cess ==1 ) {{ Str::title(NumConvert::word(round($total_amount + $cess_sums))) }} @else {{ Str::title(NumConvert::word(round($total_amount))) }} @endif Only</span></b>
+		  </p>
 	   </td>
  
  
@@ -1133,8 +1112,8 @@
 	   <td width="86" colspan="5" valign="top" style="width:64.15pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
 		  padding:0in 0in 0in 0in;height:9.75pt">
-		  @foreach($product_gst as $p_gst)
-		  <?php $val = App\Models\SaleBill::where('gst', $p_gst->gst)->where('invoice', $items->invoice)->sum('taxable_amount');?>
+		 @foreach($product_gst as $p_gst)
+		  <?php $val = App\Models\ProductExcel::where('gst', $p_gst->gst)->where('invoice', $array['items']['invoice'])->sum('taxable_amount');?>
 		  <?php \Log::info($val) ?>
 		  <p class="TableParagraph" style="margin-top:.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:20.65pt;margin-bottom:.0001pt;line-height:8.4pt; "><span style="font-size:8.0pt">@if($p_gst->gst >= 28) <?php $cess_sum = []; ?>  <?php \Log::info(round((($val) * 12/100) , 2)) ?> {{ number_format(round((($val) * 12/100) , 2), 2) }} <?php array_push($cess_sum, $val * 12/100); ?> @else 0  @endif</span></p>
@@ -1336,7 +1315,7 @@
 	   <td width="59" colspan="3" valign="top" style="width:44.15pt;border:none; border-bottom: 1px solid black;
 		  border-right:solid black 1.0pt;padding:0in 0in 0in 0in;height:9.75pt">
 		  @foreach($product_gst as $p_gst)
-		  <?php $val = App\Models\SaleBill::where('gst', $p_gst->gst)->sum('taxable_amount'); ?>
+		  <?php $val = App\Models\ProductExcel::where('gst', $p_gst->gst)->sum('taxable_amount');?>
 		  <p class="TableParagraph" style="margin-top:.35pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:20.65pt;margin-bottom:.0001pt;line-height:8.4pt; "><span style="font-size:8.0pt">@if($p_gst->gst >= 28) {{ number_format(round((($val) * 12/100) , 2), 2) }} @else 0  @endif</span></p>
 			@endforeach	
@@ -1403,17 +1382,10 @@
 	<tr style="height:16.45pt">
 	   <td width="511" colspan="7" valign="top" style="width:383.35pt;border:none;
 		  border-left:solid black 1.0pt;padding:0in 0in 0in 0in;height:16.45pt">
-		 @if($cess == 1)
-		 <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-		 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:9.1pt"><span style="font-size:8.0pt">Tax<span style="letter-spacing:.45pt"> </span>Amount<span style="letter-spacing:.45pt"> </span>(in<span style="letter-spacing:.45pt"> </span>words)<span style="letter-spacing:1.0pt"> </span>:</span><span style="font-size:8.0pt;
-		 letter-spacing:3.5pt"> </span><b><span style="font-size:8.0pt;font-family:
-		 Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_tax + $cess_sums))) }} Only</span></b></p>
-		 @else
-		 <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
-		 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:9.1pt"><span style="font-size:8.0pt">Tax<span style="letter-spacing:.45pt"> </span>Amount<span style="letter-spacing:.45pt"> </span>(in<span style="letter-spacing:.45pt"> </span>words)<span style="letter-spacing:1.0pt"> </span>:</span><span style="font-size:8.0pt;
-		 letter-spacing:3.5pt"> </span><b><span style="font-size:8.0pt;font-family:
-		 Arial,sans-serif">Indian Rupees {{ Str::title(NumConvert::word(round($total_tax))) }} Only</span></b></p>
-		 @endif
+		  <p class="TableParagraph" style="margin-top:6.35pt;margin-right:0in;margin-bottom:
+			 0in;margin-left:2.85pt;margin-bottom:.0001pt;line-height:9.1pt"><span style="font-size:8.0pt">Tax<span style="letter-spacing:.45pt"> </span>Amount<span style="letter-spacing:.45pt"> </span>(in<span style="letter-spacing:.45pt"> </span>words)<span style="letter-spacing:1.0pt"> </span>:</span><span style="font-size:8.0pt;
+			 letter-spacing:3.5pt"> </span><b><span style="font-size:8.0pt;font-family:
+			 Arial,sans-serif">@if($cess == 1) Indian Rupees {{ Str::title(NumConvert::word(round($total_tax + $cess_sums))) }} Only @else Indian Rupees {{ Str::title(NumConvert::word(round($total_tax))) }} Only @endif</span></b></p>
 	   </td>
 	   <td width="132" colspan="7" rowspan="5" valign="top" style="width:98.85pt;border: none;border-bottom:solid black 1.0pt;padding:0in 0in 0in 0in;height:16.45pt">
 		  <p class="TableParagraph"><span style="font-size:10.0pt;font-family:Times New Roman,serif">&nbsp;</span></p>
@@ -1439,19 +1411,19 @@
 		  <p class="TableParagraph"><span style="font-family:Times New Roman,serif">&nbsp;</span></p>
 		  
 		  <p class="TableParagraph" style="margin-left:5.7pt; margin-top: -9px;"><span style="font-size: 8.0pt">:<span style="letter-spacing:1.15pt"> </span></span>
-		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $bank->ac_holder }}</span></b>
+		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $array['bank']['ac_holder'] }}</span></b>
 		  </p>
 
 		  <p class="TableParagraph" style="margin-left:5.7pt; margin-top: -10px;"><span style="font-size: 8.0pt">:<span style="letter-spacing:1.15pt"> </span></span>
-		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $bank->bank_name }} ({{ $bank->ac_no }})</span></b>
+		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $array['bank']['bank_name'] }} ({{ $array['bank']['ac_no'] }})</span></b>
 		  </p>
 
 		  <p class="TableParagraph" style="margin-left:5.7pt; margin-top: -10px;"><span style="font-size: 8.0pt">:<span style="letter-spacing:1.15pt"> </span></span>
-		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $bank->ac_no }}</span></b>
+		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $array['bank']['ac_no'] }}</span></b>
 		  </p>
 
 		  <p class="TableParagraph" style="margin-left:5.7pt; margin-top: -10px;"><span style="font-size: 8.0pt">:<span style="letter-spacing:1.15pt"> </span></span>
-		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $bank->branch }}, {{ $bank->ifsc}}</span></b>
+		  	<b><span style="font-size:8.0pt;font-family:Arial,sans-serif">{{ $array['bank']['branch'] }}, {{ $array['bank']['ifsc']}}</span></b>
 		  </p>
 	   </td>
 	   
@@ -1516,7 +1488,7 @@
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:16.5pt;margin-bottom:.0001pt;text-indent:-13.7pt"><span style="font-size:8.0pt">4.<span style="font:7.0pt Times New Roman">&nbsp;&nbsp;&nbsp;&nbsp;
 			 </span></span><span style="font-size:8.0pt">Subject<span style="letter-spacing:
-				.7pt"> </span>to<span style="letter-spacing:.7pt"> </span>{{ $items->admin_state }}<span style="letter-spacing:.7pt"> </span>Jurisdiction<span style="letter-spacing:
+				.7pt"> </span>to<span style="letter-spacing:.7pt"> </span>{{ Auth::user()->state }}<span style="letter-spacing:.7pt"> </span>Jurisdiction<span style="letter-spacing:
 				.7pt"> </span>Only.</span>
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
@@ -1545,6 +1517,6 @@
 	</tr>
   
  </tbody></table>
- <div style="text-align: center; font-family:Arial, Helvetica, sans-serif; margin-bottom: 4px;font-size: 12px;">SUBJECT TO {{ Str::upper($items->admin_city) }}, {{ Str::upper($items->admin_state) }} JURISDICTION</div>
+ <div style="text-align: center; font-family:Arial, Helvetica, sans-serif; margin-bottom: 4px;font-size: 12px;">SUBJECT TO {{ Str::upper(Auth::user()->city) }}, {{ Str::upper(Auth::user()->state) }} JURISDICTION</div>
  <div style="text-align: center; font-family:Arial, Helvetica, sans-serif; margin-bottom: 4px;font-size: 11px;">This is a Computer Generated Invoice</div>
 </body></html>

@@ -73,6 +73,9 @@
 	<div class="text-right">
 		<button class="hidden-print" style="float: right; margin: 10px 20px;" onclick="window.print()">Print</button>
 	</div>
+	<div class="text-right">
+		<a style="float: right; margin: 10px 20px;" href="{{ route('send-mail', $items->mobile_no) }}" class="hidden-print">Send To Mail</a>
+	</div>
 	<br>
 	<br>
 	<div style="text-align: center; font-family:Arial, Helvetica, sans-serif; margin-bottom: 4px;;">Tax Invoice</div>
