@@ -93,7 +93,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         @if(Auth::user()->type == 'super-admin')
                         <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
-                        <a class="dropdown-item" href="{{ route('change-invoice-id') }}">Change Invoice ID</a>
+                        <a class="dropdown-item" href="{{ route('all-invoice-id') }}">Change Invoice ID</a>
                         <a class="dropdown-item" href="{{ route('add-new-admin') }}">Add New Admin</a>
                       @endif
                       <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>

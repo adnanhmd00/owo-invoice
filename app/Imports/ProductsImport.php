@@ -19,12 +19,18 @@ class ProductsImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
-        if($row['month'] != '' || $row['customer_address_billing'] != '' || $row['mobile_no'] != '' ){        
+        if($row['month'] != '' || $row['date'] != '' || $row['customer_address_billing'] != '' || $row['mobile_no'] != '' ){        
             $i = 1;
             $product_excel = new ProductExcel();
             $sale_bill = new SaleBill();
-            $product_excel->date = $row['month'];
-            $sale_bill->date = $row['month'];
+            $product_excel->added_by = Auth::user()->id;
+            $sale_bill->added_by = Auth::user()->id;
+            $product_excel->date = $row['date'];
+            $sale_bill->date = $row['date'];
+            $product_excel->month = $row['month'];
+            $sale_bill->month = $row['month'];
+            $product_excel->email_id = rtrim($row['email_id']);
+            $sale_bill->email_id = rtrim($row['email_id']);
             $product_excel->customer_name_billing = rtrim($row['customer_name_billing']);
             $sale_bill->customer_name_billing = rtrim($row['customer_name_billing']);
             isset($row['gst_no']) ? rtrim($row['gst_no']) : '';
@@ -87,7 +93,8 @@ class ProductsImport implements ToModel, WithHeadingRow
             $product_excel->save();
             $sale_bill->save();
             $p_invoice = ProductExcel::where('mobile_no', rtrim($product_excel->mobile_no))->first();
-            $invoice_ids = InvoiceId::first();
+            $invoice_ids = InvoiceId::where('user_id', Auth::user()->id)->first();
+            // $invoice_ids = InvoiceId::first();
             if(!Session()->has('mob_number')){
                 Session::put('mob_number', rtrim($product_excel->mobile_no));
                 if($invoice_ids == NULL){

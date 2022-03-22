@@ -16,6 +16,7 @@ class CreateInvoiceIdsTable extends Migration
         Schema::create('invoice_ids', function (Blueprint $table) {
             $table->id();
             $table->integer('invoice_id');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ProductExcel;
 use App\Models\SaleBill;
 use App\Models\Product;
+use App\Models\User;
 use App\Models\Bank;
 use App\Models\Tin;
 use DB;
@@ -40,13 +41,20 @@ class ProductController extends Controller
         return view('add-product-hsn', compact('gstTable'));
     }
 
-    public function changeInvoiceId(){   
-        $invoice_id = InvoiceId::first();
+    public function allInvoiceIds(){
+        $invoice_ids = InvoiceId::all();
+        $users = User::all();
+        return view('all-invoice-ids', compact('invoice_ids', 'users'));
+    }
+
+    public function changeInvoiceId($id){   
+        $invoice_id = InvoiceId::where('user_id', $id)->first();
+        // $invoice_id = InvoiceId::findOrFail($id);
         return view('change-invoice-id', compact('invoice_id'));
     }
 
-    public function changeInvoiceIdPost(Request $request){
-        $invoice_id = InvoiceId::first();
+    public function changeInvoiceIdPost(Request $request, $id){
+        $invoice_id = InvoiceId::where('user_id', $id)->first();
         $invoice_id->invoice_id = $request->invoice_id;
         if($invoice_id->save()){
             return back()->with('success', 'Your Invoice Id Has Been Updated');

@@ -114,7 +114,7 @@
 			  0in;margin-left:1.85pt;margin-bottom:.0001pt"><span style="font-size:8.0pt">Dated</span></p>
 		   <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			  0in;margin-left:1.85pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			  font-family:Arial,sans-serif">{{ date("d-M-y", strtotime($items->created_at)) }}</span></b></p>
+			  font-family:Arial,sans-serif">{{ date("d-M-y", strtotime($items->date)) }}</span></b></p>
 		</td>
 		<td style="height:21.75pt;border:none" width="0" height="29"></td>
 	 </tr>
@@ -143,7 +143,7 @@
 		  </p>
 		  <p class="TableParagraph" style="margin-top:.8pt;margin-right:0in;margin-bottom:
 			 0in;margin-left:2.35pt;margin-bottom:.0001pt"><b><span style="font-size:8.0pt;
-			 font-family:Arial,sans-serif">{{ $inv_id }}</span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif;letter-spacing:3.3pt"> </span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">dt.<span style="letter-spacing:.75pt"> </span>{{ date("d-M-y", strtotime($items->created_at)) }}</span></b></p>
+			 font-family:Arial,sans-serif">{{ $inv_id }}</span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif;letter-spacing:3.3pt"> </span></b><b><span style="font-size:8.0pt;font-family:Arial,sans-serif">dt.<span style="letter-spacing:.75pt"> </span>{{ date("d-M-y", strtotime($items->date)) }}</span></b></p>
 	   </td>
 	   <td width="250" colspan="5" valign="top" style="width:187.5pt;border-top:none;
 		  border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;
@@ -277,7 +277,7 @@
 		  <p class="TableParagraph" style="margin-left:2.35pt; margin-top: -50px;"><span style="font-size:
 			 8.0pt">Terms<span style="letter-spacing:-.45pt"> </span>of<span style="letter-spacing:-.45pt"> </span>Delivery</span></p>
 			  <p class="TableParagraph" style="margin-left:2.35pt; margin-top: 10px;"><span style="font-size:
-				8.0pt"><strong>{{ $items->date }} Month Billing</strong></span></p>	
+				8.0pt"><strong>{{ $items->month }} Month Billing</strong></span></p>	
 	   </td>
 	   <td style="height:.75in;border:none" width="0" height="72"></td>
 	</tr>

@@ -15,6 +15,10 @@ class CreateSaleBillsTable extends Migration
     {
         Schema::create('sale_bills', function (Blueprint $table) {
             $table->id();
+            $table->string('added_by');
+            $table->string('updated_by')->nullable();
+            $table->string('email_id')->nullable();
+            $table->string('month');
             $table->string('date');
             $table->string('invoice')->nullable();
             $table->string('customer_name_billing');

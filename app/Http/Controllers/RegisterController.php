@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\InvoiceId;
 use App\Models\User;
 use Session;
 use Hash;
@@ -29,7 +30,6 @@ class RegisterController extends Controller
             'address' => ['required', 'string'],
             'password' => 'required',
         ]);
-
         $inputs = $request->all();
         if(!empty($inputs)){
             $users = new User;
@@ -47,6 +47,10 @@ class RegisterController extends Controller
             $users->added_by = Auth::user()->email;
             $users->password = isset($inputs['password']) ? Hash::make($inputs['password']) : '';
             if($users->save()){
+                $invoiceID = InvoiceId::create([
+                    'invoice_id' => '1',
+                    'user_id' => $users->id,
+                ]);
                 return redirect()->route('profile')->with('success', 'Admin Added Successfully');
             // $credentials = $request->only('email', 'password');
             //     if(Auth::attempt($credentials)) {
